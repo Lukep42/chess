@@ -22,3 +22,16 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Gradle build artifacts
+.gradle/
+build/
+
+# Stop Gradle from caching user-specific properties
+gradle-app.setting
+!gradle-wrapper.jar
+
+# VS Code / IntelliJ (from before)
+.vscode/
+.idea/
+
