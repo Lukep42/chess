@@ -9,6 +9,10 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
+}
+
 application {
     mainClass = "chess.Chess"
 }
@@ -21,4 +25,8 @@ javafx {
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:all,-serial"
+}
+
+test {
+    useJUnitPlatform()
 }
