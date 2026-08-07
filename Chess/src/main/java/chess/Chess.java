@@ -14,7 +14,7 @@ public class Chess extends Application {
     @Override
     public void start(Stage stage) {
 
-        ChessBoard board = new ChessBoard(8, 8);
+        ChessBoardGUI board = new ChessBoardGUI(8, 8);
         String[] backRank = { "Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook" };
 
         for (int i = 0; i < 8; i++) {
@@ -65,7 +65,7 @@ public class Chess extends Application {
         stage.show();
     }
 
-    private void addPieceIcon(ChessBoard board, int x, int y, String imageName) {
+    private void addPieceIcon(ChessBoardGUI board, int x, int y, String imageName) {
         var image = Chess.class.getClassLoader().getResourceAsStream(imageName);
 
         if (image != null) {
