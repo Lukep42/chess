@@ -6,8 +6,8 @@ import chess.PieceIcon;
 public class King extends Piece {
     private boolean inCheck;
 
-    public King(int row, int col, String colour, PieceIcon icon, boolean inCheck) {
-        super(row, col, colour, icon);
+    public King(int row, int col, String colour, String imageName, boolean inCheck) {
+        super(row, col, colour, imageName);
         this.inCheck = inCheck;
     }
 
@@ -34,6 +34,13 @@ public class King extends Piece {
 
         // valid move
         return true;
+    }
+
+    @Override
+    public String getImageName() {
+        String colour = getColour().equals("white") ? "w" : "b";
+        return "King-" + colour + ".png";
+
     }
 
 }

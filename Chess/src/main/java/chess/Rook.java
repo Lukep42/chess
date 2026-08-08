@@ -3,15 +3,15 @@ package chess;
 import chess.ChessBoard;
 
 public class Rook extends Piece {
-    public Rook(int row, int col, String colour, PieceIcon icon) {
-        super(row, col, colour, icon);
+    public Rook(int row, int col, String colour, String imageName) {
+        super(row, col, colour, imageName);
     }
 
     @Override
     public boolean isValidMove(ChessBoard board, int newRow, int newCol) {
 
-        //can't move onto the same square
-        if(newRow == getRow() && newCol == getCol()){
+        // can't move onto the same square
+        if (newRow == getRow() && newCol == getCol()) {
             return false;
         }
 
@@ -30,6 +30,13 @@ public class Rook extends Piece {
 
         // valid move
         return true;
+    }
+
+    @Override
+    public String getImageName() {
+        String colour = getColour().equals("white") ? "w" : "b";
+        return "Rook-" + colour + ".png";
+
     }
 
 }

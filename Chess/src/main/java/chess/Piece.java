@@ -7,15 +7,15 @@ public abstract class Piece {
     private int row;
     private int col;
     private String colour;
-    private PieceIcon icon;
+    private String imageName;
     // mainly for pawn first movement
     private int movesMade;
 
-    public Piece(int row, int col, String colour, PieceIcon icon) {
+    public Piece(int row, int col, String colour, String imageName) {
         this.row = row;
         this.col = col;
         this.colour = colour;
-        this.icon = icon;
+        this.imageName = imageName;
         this.movesMade = 0;
     }
 
@@ -33,8 +33,8 @@ public abstract class Piece {
         return colour;
     }
 
-    public PieceIcon getIcon() {
-        return icon;
+    public String getImageName() {
+        return imageName;
     }
 
     public int getMovesMade() {
@@ -53,8 +53,8 @@ public abstract class Piece {
         this.colour = colour;
     }
 
-    public void setIcon(PieceIcon icon) {
-        this.icon = icon;
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public void incrementMovesMade() {

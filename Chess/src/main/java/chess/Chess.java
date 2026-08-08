@@ -14,20 +14,33 @@ public class Chess extends Application {
     @Override
     public void start(Stage stage) {
 
+        ChessBoard chessBoard = new ChessBoard();
         ChessBoardGUI board = new ChessBoardGUI(8, 8);
-        String[] backRank = { "Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight", "Rook" };
+        // String[] backRank = { "Rook", "Knight", "Bishop", "Queen", "King", "Bishop",
+        // "Knight", "Rook" };
 
-        for (int i = 0; i < 8; i++) {
-            // black back rank
-            addPieceIcon(board, i, 0, backRank[i] + "-b.png");
-            // black pawns
-            addPieceIcon(board, i, 1, "pawn-b.png");
+        // for (int i = 0; i < 8; i++) {
+        // // black back rank
+        // addPieceIcon(board, i, 0, backRank[i] + "-b.png");
+        // // black pawns
+        // addPieceIcon(board, i, 1, "pawn-b.png");
 
-            // white pawns
-            addPieceIcon(board, i, 6, "pawn-w.png");
-            // white back rank
-            addPieceIcon(board, i, 7, backRank[i] + "-w.png");
+        // // white pawns
+        // addPieceIcon(board, i, 6, "pawn-w.png");
+        // // white back rank
+        // addPieceIcon(board, i, 7, backRank[i] + "-w.png");
 
+        // }
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = chessBoard.getPiece(row, col);
+
+                if (piece != null) {
+                    addPieceIcon(board, piece);
+                }
+
+            }
         }
 
         // Creating UI Buttons
@@ -65,16 +78,32 @@ public class Chess extends Application {
         stage.show();
     }
 
-    private void addPieceIcon(ChessBoardGUI board, int x, int y, String imageName) {
-        var image = Chess.class.getClassLoader().getResourceAsStream(imageName);
+    // private void addPieceIcon(ChessBoardGUI board, int x, int y, String
+    // imageName) {
+    // var image = Chess.class.getClassLoader().getResourceAsStream(imageName);
+
+    // if (image != null) {
+    // board.getIcons().add(new PieceIcon(
+    // x, // x
+    // y, // y
+    // image));
+    // } else {
+    // System.out.println("Could not load image: " + imageName);
+    // }
+    // }
+
+    private void addPieceIcon(ChessBoardGUI board, Piece piece) {
+
+        var image = Chess.class.getClassLoader().getResourceAsStream(piece.getImageName());
 
         if (image != null) {
             board.getIcons().add(new PieceIcon(
-                    x, // x
-                    y, // y
+                    piece.getCol(),
+                    piece.getRow(),
                     image));
         } else {
-            System.out.println("Could not load image: " + imageName);
+            System.out.println("Could not load image: " + piece.getImageName());
         }
+
     }
 }

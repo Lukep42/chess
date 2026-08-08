@@ -4,8 +4,8 @@ import chess.ChessBoard;
 import chess.PieceIcon;
 
 public class Knight extends Piece {
-    public Knight(int row, int col, String colour, PieceIcon icon) {
-        super(row, col, colour, icon);
+    public Knight(int row, int col, String colour, String imageName) {
+        super(row, col, colour, imageName);
     }
 
     @Override
@@ -35,4 +35,10 @@ public class Knight extends Piece {
         return true;
     }
 
+    @Override
+    public String getImageName() {
+        String colour = getColour().equals("white") ? "w" : "b";
+        return "Knight-" + colour + ".png";
+
+    }
 }

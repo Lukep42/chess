@@ -4,8 +4,8 @@ import chess.ChessBoard;
 import chess.PieceIcon;
 
 public class Pawn extends Piece {
-    public Pawn(int row, int col, String colour, PieceIcon icon) {
-        super(row, col, colour, icon);
+    public Pawn(int row, int col, String colour, String imageName) {
+        super(row, col, colour, imageName);
     }
 
     // COME BACK FOR CAPTURING & EN-PASSANT
@@ -38,6 +38,13 @@ public class Pawn extends Piece {
 
         // valid move
         return true;
+    }
+
+    @Override
+    public String getImageName() {
+        String colour = getColour().equals("white") ? "w" : "b";
+        return "Pawn-" + colour + ".png";
+
     }
 
 }

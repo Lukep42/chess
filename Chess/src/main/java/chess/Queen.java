@@ -4,8 +4,8 @@ import chess.ChessBoard;
 import chess.PieceIcon;
 
 public class Queen extends Piece {
-    public Queen(int row, int col, String colour, PieceIcon icon) {
-        super(row, col, colour, icon);
+    public Queen(int row, int col, String colour, String imageName) {
+        super(row, col, colour, imageName);
     }
 
     @Override
@@ -36,6 +36,13 @@ public class Queen extends Piece {
 
         // valid move
         return true;
+    }
+
+    @Override
+    public String getImageName() {
+        String colour = getColour().equals("white") ? "w" : "b";
+        return "Queen-" + colour + ".png";
+
     }
 
 }
