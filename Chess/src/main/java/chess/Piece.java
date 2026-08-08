@@ -1,8 +1,5 @@
 package chess;
 
-import chess.ChessBoard;
-import chess.PieceIcon;
-
 public abstract class Piece {
     private int row;
     private int col;

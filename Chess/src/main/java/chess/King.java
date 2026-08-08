@@ -1,8 +1,5 @@
 package chess;
 
-import chess.ChessBoard;
-import chess.PieceIcon;
-
 public class King extends Piece {
     private boolean inCheck;
 

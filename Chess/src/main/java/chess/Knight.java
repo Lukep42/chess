@@ -1,8 +1,5 @@
 package chess;
 
-import chess.ChessBoard;
-import chess.PieceIcon;
-
 public class Knight extends Piece {
     public Knight(int row, int col, String colour, String imageName) {
         super(row, col, colour, imageName);

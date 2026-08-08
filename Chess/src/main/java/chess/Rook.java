@@ -1,7 +1,5 @@
 package chess;
 
-import chess.ChessBoard;
-
 public class Rook extends Piece {
     public Rook(int row, int col, String colour, String imageName) {
         super(row, col, colour, imageName);

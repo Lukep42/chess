@@ -1,8 +1,5 @@
 package chess;
 
-import chess.ChessBoard;
-import chess.PieceIcon;
-
 public class Bishop extends Piece {
     public Bishop(int row, int col, String colour, String imageName) {
         super(row, col, colour, imageName);
