@@ -16,7 +16,7 @@ public class Knight extends Piece {
         }
 
         // can only move in L shape
-        if (rowDiff != 1 && colDiff != 2 || rowDiff != 2 && colDiff != 1) {
+        if (!((rowDiff == 1 && colDiff == 2) || (rowDiff == 2 && colDiff == 1))) {
             return false;
         }
 

@@ -11,10 +11,13 @@ public class ChessBoardGUI extends Pane {
     private double gridSquareSize;
     private List<PieceIcon> icons = new ArrayList<>();
     private Canvas canvas;
+    private PieceIcon selectedPiece = null;
+    private ChessBoard board;
 
-    public ChessBoardGUI(double gridWidth, double gridHeight) {
+    public ChessBoardGUI(double gridWidth, double gridHeight, ChessBoard board) {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
+        this.board = board;
     }
 
     // Retrieves a modifiable list of ChessBoardIcons. Used to add new icons
@@ -32,6 +35,10 @@ public class ChessBoardGUI extends Pane {
             canvas.widthProperty().bind(widthProperty());
             canvas.heightProperty().bind(heightProperty());
             getChildren().add(canvas);
+
+            canvas.setOnMouseClicked(event -> {
+                squareClicked(event.getX(), event.getY());
+            });
         }
 
         GraphicsContext gfx = canvas.getGraphicsContext2D();
@@ -103,5 +110,43 @@ public class ChessBoardGUI extends Pane {
                 displayedPixelWidth,
                 displayedPixelHeight);
         gfx.restore();
+    }
+
+    private void squareClicked(double clickedX, double clickedY) {
+        int X = (int) (clickedX / gridSquareSize);
+        int Y = (int) (clickedY / gridSquareSize);
+
+        PieceIcon clickedIcon = null;
+
+        for (PieceIcon icon : icons) {
+            if (icon.isShown() && icon.getX() == X && icon.getY() == Y) {
+                clickedIcon = icon;
+                break;
+            }
+        }
+        if (selectedPiece == null) {
+            if (clickedIcon != null) {
+                selectedPiece = clickedIcon;
+                System.out.println("Piece selected at X: " + X + " and Y: " + Y);
+            }
+        } else {
+            // selectedPiece.setPosition(X, Y);
+            Piece piece = selectedPiece.getPiece();
+            boolean moved = board.movePiece(piece, Y, X);
+
+            if (moved) {
+                selectedPiece.setPosition(X, Y);
+                System.out.println("Piece moved to X: " + X + " and Y: " + Y);
+            } else {
+                System.out.println("Invalid move");
+            }
+
+            // board.movePiece(selectedPiece.getPiece(), Y, X);
+            // selectedPiece.setPosition(X, Y);
+            // System.out.println("Piece moved to X: " + X + " and Y: " + Y);
+            selectedPiece = null;
+            requestLayout();
+        }
+
     }
 }

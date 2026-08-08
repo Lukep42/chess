@@ -11,15 +11,17 @@ public class PieceIcon {
     private double y;
     private Image image;
     private boolean shown = true;
+    private Piece piece;
 
-    public PieceIcon(double x, double y, Image image) {
+    public PieceIcon(double x, double y, Image image, Piece piece) {
         this.x = x;
         this.y = y;
         this.image = image;
+        this.piece = piece;
     }
 
-    public PieceIcon(double x, double y, InputStream imageStream) {
-        this(x, y, new Image(imageStream));
+    public PieceIcon(double x, double y, InputStream imageStream, Piece piece) {
+        this(x, y, new Image(imageStream), piece);
     }
 
     public double getX() {
@@ -32,6 +34,10 @@ public class PieceIcon {
 
     public Image getImage() {
         return image;
+    }
+
+    public Piece getPiece() {
+        return piece;
     }
 
     public boolean isShown() {
@@ -49,5 +55,9 @@ public class PieceIcon {
 
     public void setShown(boolean shown) {
         this.shown = shown;
+    }
+
+    public void setPeiece(Piece piece) {
+        this.piece = piece;
     }
 }

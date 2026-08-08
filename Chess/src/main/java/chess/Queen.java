@@ -16,7 +16,7 @@ public class Queen extends Piece {
         }
 
         boolean isDiagonal = rowDiff == colDiff;
-        boolean isStraight = newRow == getRow() && newCol == getCol();
+        boolean isStraight = newRow == getRow() || newCol == getCol();
 
         // combine bishop and rook movement logic
         if (!isDiagonal && !isStraight) {

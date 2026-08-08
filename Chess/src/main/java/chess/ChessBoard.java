@@ -39,4 +39,19 @@ public class ChessBoard {
     public Piece getPiece(int row, int col) {
         return board[row][col];
     }
+
+    public boolean movePiece(Piece piece, int newRow, int newCol) {
+        int oldRow = piece.getRow();
+        int oldCol = piece.getCol();
+        if (piece.isValidMove(this, newRow, newCol)) {
+            board[newRow][newCol] = piece;
+            board[oldRow][oldCol] = null;
+            piece.setRow(newRow);
+            piece.setCol(newCol);
+            piece.incrementMovesMade();
+            return true;
+        }
+        return false;
+
+    }
 }

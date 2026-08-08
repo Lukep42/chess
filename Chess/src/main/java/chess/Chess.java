@@ -15,7 +15,7 @@ public class Chess extends Application {
     public void start(Stage stage) {
 
         ChessBoard chessBoard = new ChessBoard();
-        ChessBoardGUI board = new ChessBoardGUI(8, 8);
+        ChessBoardGUI board = new ChessBoardGUI(8, 8, chessBoard);
         // String[] backRank = { "Rook", "Knight", "Bishop", "Queen", "King", "Bishop",
         // "Knight", "Rook" };
 
@@ -100,7 +100,8 @@ public class Chess extends Application {
             board.getIcons().add(new PieceIcon(
                     piece.getCol(),
                     piece.getRow(),
-                    image));
+                    image,
+                    piece));
         } else {
             System.out.println("Could not load image: " + piece.getImageName());
         }
