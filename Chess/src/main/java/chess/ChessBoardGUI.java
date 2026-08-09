@@ -132,9 +132,13 @@ public class ChessBoardGUI extends Pane {
         } else {
             // selectedPiece.setPosition(X, Y);
             Piece piece = selectedPiece.getPiece();
+            PieceIcon capturedPiece = clickedIcon;
             boolean moved = board.movePiece(piece, Y, X);
 
             if (moved) {
+                if (capturedPiece != null && capturedPiece != selectedPiece) {
+                    capturedPiece.setShown(false);
+                }
                 selectedPiece.setPosition(X, Y);
                 System.out.println("Piece moved to X: " + X + " and Y: " + Y);
             } else {
