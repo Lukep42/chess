@@ -14,8 +14,10 @@ public class Chess extends Application {
     @Override
     public void start(Stage stage) {
 
+        var textArea = new TextArea();
+
         ChessBoard chessBoard = new ChessBoard();
-        ChessBoardGUI board = new ChessBoardGUI(8, 8, chessBoard);
+        ChessBoardGUI board = new ChessBoardGUI(8, 8, chessBoard, textArea);
         // String[] backRank = { "Rook", "Knight", "Bishop", "Queen", "King", "Bishop",
         // "Knight", "Rook" };
 
@@ -56,9 +58,10 @@ public class Chess extends Application {
         stage.setOnCloseRequest((event) -> {
             System.out.println("Close button pressed");
         });
-        var textArea = new TextArea();
-        textArea.appendText("Sidebar\n");
-        textArea.appendText("Text\n");
+        // var textArea = new TextArea();
+        // textArea.appendText(board.getMoves().toString());
+        // textArea.appendText("Sidebar\n");
+        // textArea.appendText("Text\n");
 
         // Arranging UI Elements.
         var toolbar = new ToolBar();

@@ -1,6 +1,7 @@
 package chess;
 
 import javafx.scene.canvas.*;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import java.util.*;
@@ -13,16 +14,24 @@ public class ChessBoardGUI extends Pane {
     private Canvas canvas;
     private PieceIcon selectedPiece = null;
     private ChessBoard board;
+    private List<String> movesMade = new ArrayList<>();
+    private TextArea textArea;
+    private String selectedPosition;
 
-    public ChessBoardGUI(double gridWidth, double gridHeight, ChessBoard board) {
+    public ChessBoardGUI(double gridWidth, double gridHeight, ChessBoard board, TextArea textArea) {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
         this.board = board;
+        this.textArea = textArea;
     }
 
     // Retrieves a modifiable list of ChessBoardIcons. Used to add new icons
     public List<PieceIcon> getIcons() {
         return icons;
+    }
+
+    public List<String> getMoves() {
+        return movesMade;
     }
 
     // Redraws the grid area, either because the user is manipulating the window, OR
@@ -115,6 +124,8 @@ public class ChessBoardGUI extends Pane {
     private void squareClicked(double clickedX, double clickedY) {
         int X = (int) (clickedX / gridSquareSize);
         int Y = (int) (clickedY / gridSquareSize);
+        String[] columns = { "a", "b", "c", "d", "e", "f", "g", "h" };
+        String destinationPosition = "";
 
         PieceIcon clickedIcon = null;
 
@@ -127,6 +138,7 @@ public class ChessBoardGUI extends Pane {
         if (selectedPiece == null) {
             if (clickedIcon != null) {
                 selectedPiece = clickedIcon;
+                selectedPosition = columns[X] + ((int) gridHeight - Y);
                 System.out.println("Piece selected at X: " + X + " and Y: " + Y);
             }
         } else {
@@ -140,7 +152,11 @@ public class ChessBoardGUI extends Pane {
                     capturedPiece.setShown(false);
                 }
                 selectedPiece.setPosition(X, Y);
-                System.out.println("Piece moved to X: " + X + " and Y: " + Y);
+                destinationPosition = columns[X] + ((int) gridHeight - Y);
+                // System.out.println("Piece moved to X: " + X + " and Y: " + Y);
+                movesMade.add(selectedPosition + " -> " + destinationPosition);
+                textArea.clear();
+                textArea.appendText(String.join("\n", movesMade));
             } else {
                 System.out.println("Invalid move");
             }
