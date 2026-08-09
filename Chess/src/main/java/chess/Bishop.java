@@ -28,8 +28,8 @@ public class Bishop extends Piece {
             return false;
         }
 
-        // valid move
-        return true;
+        // Check if there is a collision
+        return isCollision(board, newRow, newCol, rowDiff, colDiff);
     }
 
     @Override
@@ -39,4 +39,20 @@ public class Bishop extends Piece {
 
     }
 
+    @Override
+    public boolean isCollision(ChessBoard board, int newRow, int newCol, int rowDiff, int colDiff) {
+        if (rowDiff == colDiff) {
+            int colDirection = Integer.signum(newCol - getCol());
+            int rowDirection = Integer.signum(newRow - getRow());
+            for (int i = 1; i < colDiff; i++) {
+                int col = getCol() + i * colDirection;
+                int row = getRow() + i * rowDirection;
+
+                if (board.getPiece(row, col) != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

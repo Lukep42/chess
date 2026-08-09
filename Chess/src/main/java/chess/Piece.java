@@ -18,6 +18,8 @@ public abstract class Piece {
 
     public abstract boolean isValidMove(ChessBoard board, int newRow, int newCol);
 
+    public abstract boolean isCollision(ChessBoard board, int newRow, int newCol, int rowDiff, int colDiff);
+
     public int getRow() {
         return row;
     }

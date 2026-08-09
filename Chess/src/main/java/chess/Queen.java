@@ -31,8 +31,8 @@ public class Queen extends Piece {
             return false;
         }
 
-        // valid move
-        return true;
+        // check for collision
+        return isCollision(board, newRow, newCol, rowDiff, colDiff);
     }
 
     @Override
@@ -40,6 +40,46 @@ public class Queen extends Piece {
         String colour = getColour().equals("white") ? "w" : "b";
         return "Queen-" + colour + ".png";
 
+    }
+
+    // combine bishop + rook
+    @Override
+    public boolean isCollision(ChessBoard board, int newRow, int newCol, int rowDiff, int colDiff) {
+        // if moving horizontially
+        if (getRow() == newRow) {
+            int direction = Integer.signum(newCol - getCol());
+            for (int i = 1; i < colDiff; i++) {
+                int col = getCol() + i * direction;
+                if (board.getPiece(getRow(), col) != null) {
+                    return false;
+                }
+            }
+        }
+
+        // if moving vertically
+        if (getCol() == newCol) {
+            int direction = Integer.signum(newRow - getRow());
+            for (int i = 1; i < rowDiff; i++) {
+                int row = getRow() + i * direction;
+                if (board.getPiece(row, getCol()) != null) {
+                    return false;
+                }
+            }
+        }
+
+        if (rowDiff == colDiff) {
+            int colDirection = Integer.signum(newCol - getCol());
+            int rowDirection = Integer.signum(newRow - getRow());
+            for (int i = 1; i < colDiff; i++) {
+                int col = getCol() + i * colDirection;
+                int row = getRow() + i * rowDirection;
+
+                if (board.getPiece(row, col) != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }
