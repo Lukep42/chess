@@ -5,36 +5,50 @@ public class Pawn extends Piece {
         super(row, col, colour, imageName);
     }
 
-    // COME BACK FOR CAPTURING & EN-PASSANT
+    // COME BACK FOR EN-PASSANT
     @Override
     public boolean isValidMove(ChessBoard board, int newRow, int newCol) {
         int rowDiff = newRow - getRow();
         int colDiff = Math.abs(newCol - getCol());
+        int direction = getColour().equals("white") ? -1 : 1;
 
         // can't move onto the same square
         if (newRow == getRow() && newCol == getCol()) {
             return false;
         }
         // can move forward 2 on the first move
-        if (getMovesMade() == 0 && rowDiff == 2) {
-            return true;
+        if (rowDiff == 2 * direction) {
+            if (getMovesMade() != 0) {
+                return false;
+            }
+            return isCollision(board, newRow, newCol, rowDiff, colDiff);
         }
 
         // can only move one
-        if (rowDiff != 1 && colDiff != 0) {
+        if (rowDiff != direction && colDiff != 0) {
             return false;
         }
 
         // target square
         Piece target = board.getPiece(newRow, newCol);
 
+        // capture logic
+        if (colDiff == 1) {
+            return rowDiff == direction && target != null && !target.getColour().equals(getColour());
+        }
+
         // can't capture own piece
         if (target != null && target.getColour().equals(getColour())) {
             return false;
         }
 
+        // can't go forward if blocked
+        if (target != null) {
+            return false;
+        }
+
         // valid move
-        return true;
+        return isCollision(board, newRow, newCol, rowDiff, colDiff);
     }
 
     @Override
@@ -47,7 +61,17 @@ public class Pawn extends Piece {
     // can't have a collision
     @Override
     public boolean isCollision(ChessBoard board, int newRow, int newCol, int rowDiff, int colDiff) {
-        return false;
-    }
 
+        // if moving vertically
+        if (getCol() == newCol) {
+            int direction = getColour().equals("white") ? -1 : 1;
+            for (int i = 1; i < Math.abs(rowDiff); i++) {
+                int row = getRow() + i * direction;
+                if (board.getPiece(row, getCol()) != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
