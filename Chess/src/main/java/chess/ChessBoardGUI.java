@@ -13,15 +13,24 @@ public class ChessBoardGUI extends Pane {
     private List<PieceIcon> icons = new ArrayList<>();
     private Canvas canvas;
     private PieceIcon selectedPiece = null;
-    private ChessBoard board;
+    // private ChessBoard board;
     private List<String> movesMade = new ArrayList<>();
     private TextArea textArea;
     private String selectedPosition;
+    private ChessGame game;
 
-    public ChessBoardGUI(double gridWidth, double gridHeight, ChessBoard board, TextArea textArea) {
+    // public ChessBoardGUI(double gridWidth, double gridHeight, ChessBoard board,
+    // TextArea textArea) {
+    // this.gridWidth = gridWidth;
+    // this.gridHeight = gridHeight;
+    // this.board = board;
+    // this.textArea = textArea;
+    // }
+
+    public ChessBoardGUI(double gridWidth, double gridHeight, ChessGame game, TextArea textArea) {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
-        this.board = board;
+        this.game = game;
         this.textArea = textArea;
     }
 
@@ -145,7 +154,7 @@ public class ChessBoardGUI extends Pane {
             // selectedPiece.setPosition(X, Y);
             Piece piece = selectedPiece.getPiece();
             PieceIcon capturedPiece = clickedIcon;
-            boolean moved = board.movePiece(piece, Y, X);
+            boolean moved = game.makeMove(piece, Y, X);
 
             if (moved) {
                 if (capturedPiece != null && capturedPiece != selectedPiece) {

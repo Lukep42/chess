@@ -17,7 +17,7 @@ public class King extends Piece {
         }
 
         // Can't move more than one square
-        if (Math.abs(newRow - getRow()) > 1 && Math.abs(newCol - getCol()) > 1) {
+        if (Math.abs(newRow - getRow()) > 1 || Math.abs(newCol - getCol()) > 1) {
             return false;
         }
 

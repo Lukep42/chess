@@ -16,8 +16,13 @@ public class Chess extends Application {
 
         var textArea = new TextArea();
 
-        ChessBoard chessBoard = new ChessBoard();
-        ChessBoardGUI board = new ChessBoardGUI(8, 8, chessBoard, textArea);
+        // ChessBoard chessBoard = new ChessBoard();
+        // ChessBoardGUI board = new ChessBoardGUI(8, 8, chessBoard, textArea);
+
+        ChessGame game = new ChessGame();
+        ChessBoardGUI board = new ChessBoardGUI(8, 8, game, textArea);
+        ChessBoard chessBoard = game.getBoard();
+
         // String[] backRank = { "Rook", "Knight", "Bishop", "Queen", "King", "Bishop",
         // "Knight", "Rook" };
 
