@@ -1,9 +1,15 @@
 package chess;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
+
 import java.util.*;
 
 public class ChessBoardGUI extends Pane {
@@ -155,6 +161,37 @@ public class ChessBoardGUI extends Pane {
             Piece piece = selectedPiece.getPiece();
             PieceIcon capturedPiece = clickedIcon;
             boolean moved = game.makeMove(piece, Y, X);
+
+            // Displays a message saying that they are in check.
+            if (game.isChecked()) {
+                Label checkMessage = new Label(game.getCurrentTurn() + " is in check");
+                checkMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
+                        "-fx-text-fill: white; " +
+                        "-fx-padding: 10px 20px; " +
+                        "-fx-font-size: 16px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 5px;");
+
+                checkMessage.setLayoutX(0);
+                checkMessage.setLayoutY(0);
+                // Dynamically bind X and Y to the exact center
+                checkMessage.layoutXProperty()
+                        .bind(widthProperty().divide(2).subtract(checkMessage.widthProperty().divide(2)));
+                checkMessage.layoutYProperty()
+                        .bind(heightProperty().divide(2).subtract(checkMessage.heightProperty().divide(2)));
+
+                getChildren().add(checkMessage);
+
+                PauseTransition pause = new PauseTransition(Duration.seconds(2));
+
+                FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), checkMessage);
+                fadeOut.setFromValue(1);
+                fadeOut.setToValue(0);
+
+                SequentialTransition sequence = new SequentialTransition(pause, fadeOut);
+                sequence.setOnFinished(e -> getChildren().remove(checkMessage));
+                sequence.play();
+            }
 
             if (moved) {
                 if (capturedPiece != null && capturedPiece != selectedPiece) {
