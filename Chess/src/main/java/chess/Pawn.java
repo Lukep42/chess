@@ -16,39 +16,48 @@ public class Pawn extends Piece {
         if (newRow == getRow() && newCol == getCol()) {
             return false;
         }
-        // can move forward 2 on the first move
-        if (rowDiff == 2 * direction) {
-            if (getMovesMade() != 0) {
-                return false;
-            }
-            return isCollision(board, newRow, newCol, rowDiff, colDiff);
-        }
-
-        // can only move one
-        if (rowDiff != direction && colDiff != 0) {
-            return false;
-        }
-
         // target square
         Piece target = board.getPiece(newRow, newCol);
 
+        // // can only move one
+        // if (rowDiff != direction || colDiff != 0) {
+        // // can't go forward if blocked
+        // if (target != null) {
+        // return false;
+        // }
+        // }
+
+        // can only move one
+        if (rowDiff == direction && colDiff == 0) {
+            return target == null;
+        }
+
+        // can move forward 2 on the first move
+        if (rowDiff == 2 * direction && colDiff == 0) {
+            if (getMovesMade() != 0) {
+                return false;
+            }
+
+            if (target != null) {
+                return false;
+            }
+
+            return isCollision(board, newRow, newCol, rowDiff, colDiff);
+        }
+
         // capture logic
-        if (colDiff == 1) {
-            return rowDiff == direction && target != null && !target.getColour().equals(getColour());
+        if (rowDiff == direction && colDiff == 1) {
+            return target != null && !target.getColour().equals(getColour());
         }
 
-        // can't capture own piece
-        if (target != null && target.getColour().equals(getColour())) {
-            return false;
-        }
-
-        // can't go forward if blocked
-        if (target != null) {
-            return false;
-        }
+        // // can't capture own piece
+        // if (target != null && target.getColour().equals(getColour())) {
+        // return false;
+        // }
 
         // valid move
-        return isCollision(board, newRow, newCol, rowDiff, colDiff);
+        // return isCollision(board, newRow, newCol, rowDiff, colDiff);
+        return false;
     }
 
     @Override

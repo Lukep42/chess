@@ -78,4 +78,40 @@ public class ChessGame {
 
         return inCheck;
     }
+
+    public boolean isCheckmated() {
+        if (isChecked()) {
+            Piece checkedKing = board.getKing(currentTurn);
+            for (int row = 0; row < 8; row++) {
+                for (int col = 0; col < 8; col++) {
+                    if (!checkedKing.isValidMove(board, row, col)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isStalemate() {
+        if (isChecked()) {
+            return false;
+        }
+
+        for (Piece piece : board.getPieces(currentTurn)) {
+            for (int row = 0; row < 8; row++) {
+                for (int col = 0; col < 8; col++) {
+                    if (!piece.isValidMove(board, row, col)) {
+                        continue;
+                    }
+
+                    if (wouldCheck(piece, row, col)) {
+                        continue;
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

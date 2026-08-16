@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChessBoard {
     private Piece[][] board = new Piece[8][8];
 
@@ -38,6 +41,19 @@ public class ChessBoard {
 
     public Piece getPiece(int row, int col) {
         return board[row][col];
+    }
+
+    public List<Piece> getPieces(String colour) {
+        List<Piece> pieces = new ArrayList<>();
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = board[row][col];
+                if (piece != null && piece.getColour().equals(colour)) {
+                    pieces.add(piece);
+                }
+            }
+        }
+        return pieces;
     }
 
     public boolean movePiece(Piece piece, int newRow, int newCol) {

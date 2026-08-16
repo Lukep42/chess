@@ -193,6 +193,46 @@ public class ChessBoardGUI extends Pane {
                 sequence.play();
             }
 
+            if (game.isStalemate()) {
+                Label checkMessage = new Label("STALEMATE " + game.getCurrentTurn().toUpperCase() + " LOSES");
+                checkMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
+                        "-fx-text-fill: white; " +
+                        "-fx-padding: 10px 20px; " +
+                        "-fx-font-size: 16px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 5px;");
+
+                checkMessage.setLayoutX(0);
+                checkMessage.setLayoutY(0);
+                // Dynamically bind X and Y to the exact center
+                checkMessage.layoutXProperty()
+                        .bind(widthProperty().divide(2).subtract(checkMessage.widthProperty().divide(2)));
+                checkMessage.layoutYProperty()
+                        .bind(heightProperty().divide(2).subtract(checkMessage.heightProperty().divide(2)));
+
+                getChildren().add(checkMessage);
+            }
+
+            if (game.isCheckmated()) {
+                Label checkMessage = new Label("CHECKMATE " + game.getCurrentTurn().toUpperCase() + " LOSES");
+                checkMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
+                        "-fx-text-fill: white; " +
+                        "-fx-padding: 10px 20px; " +
+                        "-fx-font-size: 16px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 5px;");
+
+                checkMessage.setLayoutX(0);
+                checkMessage.setLayoutY(0);
+                // Dynamically bind X and Y to the exact center
+                checkMessage.layoutXProperty()
+                        .bind(widthProperty().divide(2).subtract(checkMessage.widthProperty().divide(2)));
+                checkMessage.layoutYProperty()
+                        .bind(heightProperty().divide(2).subtract(checkMessage.heightProperty().divide(2)));
+
+                getChildren().add(checkMessage);
+            }
+
             if (moved) {
                 if (capturedPiece != null && capturedPiece != selectedPiece) {
                     capturedPiece.setShown(false);
