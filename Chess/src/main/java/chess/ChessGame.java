@@ -80,17 +80,25 @@ public class ChessGame {
     }
 
     public boolean isCheckmated() {
-        if (isChecked()) {
-            Piece checkedKing = board.getKing(currentTurn);
+        if (!isChecked()) {
+            return false;
+        }
+
+        for (Piece piece : board.getPieces(currentTurn)) {
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 8; col++) {
-                    if (!checkedKing.isValidMove(board, row, col)) {
-                        return true;
+                    if (!piece.isValidMove(board, row, col)) {
+                        continue;
                     }
+
+                    if (wouldCheck(piece, row, col)) {
+                        continue;
+                    }
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public boolean isStalemate() {
