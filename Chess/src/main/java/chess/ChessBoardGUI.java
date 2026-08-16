@@ -110,6 +110,12 @@ public class ChessBoardGUI extends Pane {
         double x = (icon.getX() + 0.5) * gridSquareSize;
         double y = (icon.getY() + 0.5) * gridSquareSize;
 
+        if (icon == selectedPiece) {
+            gfx.setFill(Color.rgb(255, 215, 0, 0.45));
+            gfx.fillRect(icon.getX() * gridSquareSize, icon.getY() * gridSquareSize, gridSquareSize, gridSquareSize);
+
+        }
+
         // Keep image's aspect ratio while fitting inside a square
         var image = icon.getImage();
         double fullSizePixelWidth = image.getWidth();
@@ -155,8 +161,20 @@ public class ChessBoardGUI extends Pane {
                 selectedPiece = clickedIcon;
                 selectedPosition = columns[X] + ((int) gridHeight - Y);
                 System.out.println("Piece selected at X: " + X + " and Y: " + Y);
+                requestLayout();
             }
         } else {
+            if (clickedIcon != null && clickedIcon != selectedPiece) {
+                Piece newPiece = clickedIcon.getPiece();
+                if (newPiece.getColour() == game.getCurrentTurn()) {
+                    selectedPiece = clickedIcon;
+                    selectedPosition = columns[X] + ((int) gridHeight - Y);
+                    System.out.println("Piece selection changed to: " + selectedPosition);
+
+                    requestLayout();
+                    return;
+                }
+            }
             // selectedPiece.setPosition(X, Y);
             Piece piece = selectedPiece.getPiece();
             PieceIcon capturedPiece = clickedIcon;
