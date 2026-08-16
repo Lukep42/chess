@@ -13,31 +13,10 @@ public class Chess extends Application {
 
     @Override
     public void start(Stage stage) {
-
         var textArea = new TextArea();
-
-        // ChessBoard chessBoard = new ChessBoard();
-        // ChessBoardGUI board = new ChessBoardGUI(8, 8, chessBoard, textArea);
-
         ChessGame game = new ChessGame();
         ChessBoardGUI board = new ChessBoardGUI(8, 8, game, textArea);
         ChessBoard chessBoard = game.getBoard();
-
-        // String[] backRank = { "Rook", "Knight", "Bishop", "Queen", "King", "Bishop",
-        // "Knight", "Rook" };
-
-        // for (int i = 0; i < 8; i++) {
-        // // black back rank
-        // addPieceIcon(board, i, 0, backRank[i] + "-b.png");
-        // // black pawns
-        // addPieceIcon(board, i, 1, "pawn-b.png");
-
-        // // white pawns
-        // addPieceIcon(board, i, 6, "pawn-w.png");
-        // // white back rank
-        // addPieceIcon(board, i, 7, backRank[i] + "-w.png");
-
-        // }
 
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
@@ -51,26 +30,42 @@ public class Chess extends Application {
         }
 
         // Creating UI Buttons
-        var startBtn = new Button("Rematch");
-        var endBtn = new Button("Resign");
+        var rematchBtn = new Button("Rematch");
+        var resignBtn = new Button("Resign");
 
-        startBtn.setOnAction((event) -> {
+        rematchBtn.setOnAction((event) -> {
             System.out.println("Rematch button pressed");
+            game.reset();
+            board.getIcons().clear();
+            ChessBoard newChessBoard = game.getBoard();
+
+            for (int row = 0; row < 8; row++) {
+                for (int col = 0; col < 8; col++) {
+                    Piece piece = newChessBoard.getPiece(row, col);
+
+                    if (piece != null) {
+                        addPieceIcon(board, piece);
+                    }
+
+                }
+
+            }
+            board.clearResignedMessage();
+            board.requestLayout();
+            game.setCurrentTurn("white");
         });
-        endBtn.setOnAction((event) -> {
+        resignBtn.setOnAction((event) -> {
             System.out.println("Resign button pressed");
+            board.resigned();
+
         });
         stage.setOnCloseRequest((event) -> {
             System.out.println("Close button pressed");
         });
-        // var textArea = new TextArea();
-        // textArea.appendText(board.getMoves().toString());
-        // textArea.appendText("Sidebar\n");
-        // textArea.appendText("Text\n");
 
         // Arranging UI Elements.
         var toolbar = new ToolBar();
-        toolbar.getItems().addAll(startBtn, endBtn);
+        toolbar.getItems().addAll(rematchBtn, resignBtn);
 
         var splitPane = new SplitPane();
         splitPane.getItems().addAll(board, textArea);
@@ -85,20 +80,6 @@ public class Chess extends Application {
         stage.setScene(scene);
         stage.show();
     }
-
-    // private void addPieceIcon(ChessBoardGUI board, int x, int y, String
-    // imageName) {
-    // var image = Chess.class.getClassLoader().getResourceAsStream(imageName);
-
-    // if (image != null) {
-    // board.getIcons().add(new PieceIcon(
-    // x, // x
-    // y, // y
-    // image));
-    // } else {
-    // System.out.println("Could not load image: " + imageName);
-    // }
-    // }
 
     private void addPieceIcon(ChessBoardGUI board, Piece piece) {
 

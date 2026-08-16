@@ -17,6 +17,14 @@ public class ChessGame {
         return currentTurn;
     }
 
+    public void reset() {
+        board = new ChessBoard();
+    }
+
+    public void setCurrentTurn(String currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
     // check logic
     public boolean isChecked() {
         Piece checkKing = board.getKing(currentTurn);

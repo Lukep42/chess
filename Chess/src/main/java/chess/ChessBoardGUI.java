@@ -24,6 +24,7 @@ public class ChessBoardGUI extends Pane {
     private TextArea textArea;
     private String selectedPosition;
     private ChessGame game;
+    private Label resignMessage;
 
     // public ChessBoardGUI(double gridWidth, double gridHeight, ChessBoard board,
     // TextArea textArea) {
@@ -271,6 +272,32 @@ public class ChessBoardGUI extends Pane {
             selectedPiece = null;
             requestLayout();
         }
+    }
 
+    public void resigned() {
+        resignMessage = new Label("GAME OVER  " + game.getCurrentTurn().toUpperCase() + " RESIGNS");
+        resignMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
+                "-fx-text-fill: white; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 16px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 5px;");
+
+        resignMessage.setLayoutX(0);
+        resignMessage.setLayoutY(0);
+        // Dynamically bind X and Y to the exact center
+        resignMessage.layoutXProperty()
+                .bind(widthProperty().divide(2).subtract(resignMessage.widthProperty().divide(2)));
+        resignMessage.layoutYProperty()
+                .bind(heightProperty().divide(2).subtract(resignMessage.heightProperty().divide(2)));
+
+        getChildren().add(resignMessage);
+    }
+
+    public void clearResignedMessage() {
+        if (resignMessage != null) {
+            getChildren().remove(resignMessage);
+            resignMessage = null;
+        }
     }
 }
