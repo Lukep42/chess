@@ -9,8 +9,14 @@ public class King extends Piece {
     }
 
     @Override
-    // COME BACK FOR CASTLING
     public boolean isValidMove(ChessBoard board, int newRow, int newCol) {
+        int rowDiff = Math.abs(newRow - getRow());
+
+        int colDiff = Math.abs(newCol - getCol());
+
+        if (rowDiff == 0 && colDiff == 2) {
+            return board.canCastle(this, newRow, newCol);
+        }
         // can't move onto the same square
         if (newRow == getRow() && newCol == getCol()) {
             return false;

@@ -45,6 +45,12 @@ public class ChessGame {
             return false;
         }
 
+        if (piece instanceof King && Math.abs(newCol - piece.getCol()) == 2) {
+            board.castleMove(piece, newRow, newCol);
+            switchTurn();
+            return true;
+        }
+
         // king would be in check
         if (wouldCheck(piece, newRow, newCol)) {
             return false;

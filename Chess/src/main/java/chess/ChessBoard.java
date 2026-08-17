@@ -124,4 +124,64 @@ public class ChessBoard {
         piece.setRow(oldRow);
         piece.setCol(oldCol);
     }
+
+    public boolean canCastle(Piece king, int newRow, int newCol) {
+        int row = king.getRow();
+        Piece rook;
+
+        if (newRow != row) {
+            return false;
+        }
+
+        if (isAttacked(row, king.getCol(), king.getColour())) {
+            return false;
+        }
+
+        boolean kingSide = newCol > king.getCol();
+        int rookCol = kingSide ? 7 : 0;
+        rook = board[row][rookCol];
+
+        if (!(rook instanceof Rook) || !rook.getColour().equals(king.getColour())) {
+            return false;
+        }
+
+        if (king.getMovesMade() != 0 || rook.getMovesMade() != 0) {
+            return false;
+        }
+        int direction = kingSide ? 1 : -1;
+
+        for (int col = king.getCol() + direction; col != rookCol; col += direction) {
+            if (board[row][col] != null) {
+                return false;
+            }
+        }
+
+        int middleCol = king.getCol() + direction;
+
+        if (isAttacked(row, middleCol, king.getColour())) {
+            return false;
+        }
+
+        if (isAttacked(row, newCol, king.getColour())) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean castleMove(Piece piece, int newRow, int newCol) {
+        boolean kingSide = newCol > piece.getCol();
+        int rookOldCol = kingSide ? 7 : 0;
+        int rookNewCol = kingSide ? 5 : 3;
+
+        Piece rook = getPiece(piece.getRow(), rookOldCol);
+
+        movePiece(piece, newRow, newCol);
+
+        board[newRow][rookNewCol] = rook;
+        board[newRow][rookOldCol] = null;
+        rook.setRow(newRow);
+        rook.setCol(rookNewCol);
+        rook.incrementMovesMade();
+        return true;
+    }
 }

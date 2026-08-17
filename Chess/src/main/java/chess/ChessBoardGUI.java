@@ -178,6 +178,8 @@ public class ChessBoardGUI extends Pane {
             }
             // selectedPiece.setPosition(X, Y);
             Piece piece = selectedPiece.getPiece();
+            int oldX = (int) selectedPiece.getX();
+            int oldY = (int) selectedPiece.getY();
             PieceIcon capturedPiece = clickedIcon;
             boolean moved = game.makeMove(piece, Y, X);
 
@@ -257,6 +259,11 @@ public class ChessBoardGUI extends Pane {
                     capturedPiece.setShown(false);
                 }
                 selectedPiece.setPosition(X, Y);
+
+                if (piece instanceof King && Math.abs(X - oldX) == 2) {
+                    updateCastlingIcon(piece, oldX, oldY, X);
+                }
+
                 destinationPosition = columns[X] + ((int) gridHeight - Y);
                 // System.out.println("Piece moved to X: " + X + " and Y: " + Y);
                 movesMade.add(selectedPosition + " -> " + destinationPosition);
@@ -298,6 +305,20 @@ public class ChessBoardGUI extends Pane {
         if (resignMessage != null) {
             getChildren().remove(resignMessage);
             resignMessage = null;
+        }
+    }
+
+    private void updateCastlingIcon(Piece king, int oldX, int oldY, int newX) {
+        boolean kingSide = newX > oldX;
+        int rookOldX = kingSide ? 7 : 0;
+        int rookNewX = kingSide ? 5 : 3;
+
+        for (PieceIcon icon : icons) {
+            if (icon.isShown() && icon.getX() == rookOldX && icon.getY() == oldY && icon.getPiece() instanceof Rook
+                    && icon.getPiece().getColour().equals(king.getColour())) {
+                icon.setPosition(rookNewX, oldY);
+                return;
+            }
         }
     }
 }
