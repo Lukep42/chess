@@ -43,6 +43,10 @@ public class ChessBoard {
         return board[row][col];
     }
 
+    public void setPiece(int row, int col, Piece piece) {
+        this.board[row][col] = piece;
+    }
+
     public List<Piece> getPieces(String colour) {
         List<Piece> pieces = new ArrayList<>();
         for (int row = 0; row < 8; row++) {
@@ -98,7 +102,6 @@ public class ChessBoard {
         return false;
     }
 
-    // maybe a set piece function to see if moving a piece would cause check
     public Piece makeTemporaryMove(Piece piece, int newRow, int newCol) {
         int oldRow = piece.getRow();
         int oldCol = piece.getCol();

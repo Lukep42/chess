@@ -3,11 +3,19 @@ package chess;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.canvas.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -264,6 +272,10 @@ public class ChessBoardGUI extends Pane {
                     updateCastlingIcon(piece, oldX, oldY, X);
                 }
 
+                if (piece instanceof Pawn && (Y == 7 || Y == 0)) {
+                    openPromotionChoice(piece);
+                }
+
                 destinationPosition = columns[X] + ((int) gridHeight - Y);
                 // System.out.println("Piece moved to X: " + X + " and Y: " + Y);
                 movesMade.add(selectedPosition + " -> " + destinationPosition);
@@ -321,4 +333,107 @@ public class ChessBoardGUI extends Pane {
             }
         }
     }
+
+    public void openPromotionChoice(Piece pawn) {
+        ChessBoard tempboard = game.getBoard();
+        int row = pawn.getRow();
+        int col = pawn.getCol();
+        StackPane choice = new StackPane();
+        HBox buttonLayout = new HBox();
+        Stage newWindow = new Stage();
+        buttonLayout.setSpacing(10);
+        buttonLayout.setAlignment(Pos.CENTER);
+        // choice.getChildren().add(new Label("Choose your piece"));
+        Label title = new Label("Choose your piece");
+
+        String colour = "white".equals(pawn.getColour()) ? "white" : "black";
+        String colourShortened = "white".equals(pawn.getColour()) ? "-w" : "-b";
+
+        Button queenButton = new Button();
+        queenButton.setGraphic(getPromotionIcon("Queen" + colourShortened + ".png"));
+        Button rookButton = new Button();
+        rookButton.setGraphic(getPromotionIcon("Rook" + colourShortened + ".png"));
+        Button knightButton = new Button();
+        knightButton.setGraphic(getPromotionIcon("Knight" + colourShortened + ".png"));
+        Button bishopButton = new Button();
+        bishopButton.setGraphic(getPromotionIcon("Bishop" + colourShortened + ".png"));
+
+        queenButton.setOnAction(e -> {
+            Piece newQueen = new Queen(row, col, colour, null);
+            tempboard.setPiece(row, col, newQueen);
+            this.getIcons().removeIf(icon -> icon.getPiece() == pawn);
+            addPieceIcon(this, newQueen);
+            requestLayout();
+            newWindow.close();
+        });
+        rookButton.setOnAction(e -> {
+            Piece newRook = new Rook(row, col, colour, null);
+            tempboard.setPiece(row, col, newRook);
+            this.getIcons().removeIf(icon -> icon.getPiece() == pawn);
+            addPieceIcon(this, newRook);
+            requestLayout();
+            newWindow.close();
+        });
+        knightButton.setOnAction(e -> {
+            Piece newKnight = new Knight(row, col, colour, null);
+            tempboard.setPiece(row, col, newKnight);
+            this.getIcons().removeIf(icon -> icon.getPiece() == pawn);
+            addPieceIcon(this, newKnight);
+            requestLayout();
+            newWindow.close();
+        });
+        bishopButton.setOnAction(e -> {
+            Piece newBishop = new Bishop(row, col, colour, null);
+            tempboard.setPiece(row, col, newBishop);
+            this.getIcons().removeIf(icon -> icon.getPiece() == pawn);
+            addPieceIcon(this, newBishop);
+            requestLayout();
+            newWindow.close();
+        });
+
+        buttonLayout.getChildren().addAll(queenButton, rookButton, knightButton, bishopButton);
+
+        choice.getChildren().addAll(title, buttonLayout);
+
+        Scene scene = new Scene(choice, 300, 200);
+
+        // Stage newWindow = new Stage();
+        newWindow.setTitle("Pawn promotion");
+        newWindow.setScene(scene);
+
+        newWindow.show();
+    }
+
+    private void addPieceIcon(ChessBoardGUI board, Piece piece) {
+
+        var image = Chess.class.getClassLoader().getResourceAsStream(piece.getImageName());
+
+        if (image != null) {
+            board.getIcons().add(new PieceIcon(
+                    piece.getCol(),
+                    piece.getRow(),
+                    image,
+                    piece));
+        } else {
+            System.out.println("Could not load image: " + piece.getImageName());
+        }
+
+    }
+
+    private ImageView getPromotionIcon(String imageName) {
+        var image = Chess.class.getClassLoader().getResourceAsStream(imageName);
+
+        if (image == null) {
+            System.out.println("could not load image: " + imageName);
+            return null;
+        }
+
+        ImageView imageView = new ImageView(new Image(image));
+        imageView.setFitWidth(50);
+        imageView.setFitHeight(50);
+        imageView.setPreserveRatio(true);
+
+        return imageView;
+    }
+
 }
