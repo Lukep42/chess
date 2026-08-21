@@ -26,6 +26,7 @@ replay_pid*
 # Gradle build artifacts
 .gradle/
 build/
+bin/
 
 # Stop Gradle from caching user-specific properties
 gradle-app.setting
