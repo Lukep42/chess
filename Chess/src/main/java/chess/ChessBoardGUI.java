@@ -189,6 +189,22 @@ public class ChessBoardGUI extends Pane {
             int oldX = (int) selectedPiece.getX();
             int oldY = (int) selectedPiece.getY();
             PieceIcon capturedPiece = clickedIcon;
+            PieceIcon enPassantCapture = null;
+
+            if (piece instanceof Pawn && game.isEnPassant(piece, Y, X)) {
+                int capturedX = X;
+                int capturedY = oldY;
+
+                for (PieceIcon icon : icons) {
+                    if (icon.isShown() && icon.getX() == capturedX && icon.getY() == capturedY
+                            && icon.getPiece() instanceof Pawn
+                            && !icon.getPiece().getColour().equals(piece.getColour())) {
+                        enPassantCapture = icon;
+                        break;
+                    }
+                }
+            }
+
             boolean moved = game.makeMove(piece, Y, X);
 
             // Displays a message saying that they are in check.
@@ -266,6 +282,11 @@ public class ChessBoardGUI extends Pane {
                 if (capturedPiece != null && capturedPiece != selectedPiece) {
                     capturedPiece.setShown(false);
                 }
+
+                if (enPassantCapture != null) {
+                    enPassantCapture.setShown(false);
+                }
+
                 selectedPiece.setPosition(X, Y);
 
                 if (piece instanceof King && Math.abs(X - oldX) == 2) {
