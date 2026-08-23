@@ -51,6 +51,7 @@ public class Chess extends Application {
 
             }
             board.clearResignedMessage();
+            board.clearStateMessage();
             board.requestLayout();
             game.setCurrentTurn("white");
         });
