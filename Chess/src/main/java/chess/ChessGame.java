@@ -1,11 +1,11 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 // RULES TO DO
 // 3 REPITION DRAW -> maybe come back
-// window pop pup -> if no capture or pawn in 75 moves -> auto draw pop up
-// insufficient material -> if king & king, or king & bishop/knight vs king
 // offer draw
 
 public class ChessGame {
@@ -356,5 +356,43 @@ public class ChessGame {
 
     public boolean isSeventyFiveMoveDraw() {
         return moveCounter >= 150;
+    }
+
+    public boolean isInsufficientMaterial() {
+        List<Piece> pieces = new ArrayList<>();
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = board.getPiece(row, col);
+
+                if (piece != null) {
+                    pieces.add(piece);
+                }
+            }
+        }
+        int bishops = 0;
+        int knights = 0;
+        Piece bishop1 = null;
+        Piece bishop2 = null;
+        for (Piece piece : pieces) {
+            if (piece instanceof Bishop) {
+                if (bishop1 == null) {
+                    bishop1 = piece;
+                } else {
+                    bishop2 = piece;
+                }
+                bishops++;
+            } else if (piece instanceof Knight) {
+                knights++;
+            } else if (!(piece instanceof King)) {
+                return false;
+            }
+        }
+
+        if (bishops == 2 && !bishop1.getColour().equals(bishop2.getColour())) {
+            boolean isDarkBishop1 = ((bishop1.getRow() + bishop1.getCol()) % 2 != 0);
+            boolean isDarkBishop2 = ((bishop2.getRow() + bishop2.getCol()) % 2 != 0);
+            return isDarkBishop1 == isDarkBishop2;
+        }
+        return pieces.size() == 2 || (pieces.size() == 3 && (bishops == 1 || knights == 1));
     }
 }
