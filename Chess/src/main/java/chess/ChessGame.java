@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 // RULES TO DO
 // 3 REPITION DRAW -> maybe come back
-// 50 MOVE RULE -> if no capture or pawn movement in 50 moves -> claim draw
 // window pop pup -> if no capture or pawn in 75 moves -> auto draw pop up
 // insufficient material -> if king & king, or king & bishop/knight vs king
 // offer draw
@@ -18,6 +17,9 @@ public class ChessGame {
     private int lastMovedNewRow;
     private int lastMovedNewCol;
     private HashMap<String, Integer> positionHistory = new HashMap<>();
+    private int moveCounter = 0;
+    private boolean whiteFiftyMoveDraw;
+    private boolean blackFiftyMoveDraw;
 
     public ChessGame() {
         this.board = new ChessBoard();
@@ -43,6 +45,9 @@ public class ChessGame {
         lastMovedNewCol = -1;
         positionHistory.clear();
         positionHistory.put(getPositionKey(), 1);
+        moveCounter = 0;
+        whiteFiftyMoveDraw = false;
+        blackFiftyMoveDraw = false;
     }
 
     public void setCurrentTurn(String currentTurn) {
@@ -82,6 +87,10 @@ public class ChessGame {
             lastMovedOldCol = oldCol;
             lastMovedNewRow = piece.getRow();
             lastMovedNewCol = piece.getCol();
+            moveCounter = 0;
+            whiteFiftyMoveDraw = false;
+            blackFiftyMoveDraw = false;
+
             switchTurn();
             recordPosition();
 
@@ -101,6 +110,7 @@ public class ChessGame {
             lastMoved = piece;
             lastMovedNewRow = piece.getRow();
             lastMovedNewCol = piece.getCol();
+            moveCounter++;
 
             switchTurn();
             recordPosition();
@@ -115,10 +125,20 @@ public class ChessGame {
         lastMovedOldRow = piece.getRow();
         lastMovedOldCol = piece.getCol();
         // make the move
+        boolean capture = board.getPiece(newRow, newCol) != null;
+        boolean pawnMove = piece instanceof Pawn;
         boolean moved = board.movePiece(piece, newRow, newCol);
 
         if (!moved) {
             return false;
+        }
+
+        if (capture || pawnMove) {
+            moveCounter = 0;
+            whiteFiftyMoveDraw = false;
+            blackFiftyMoveDraw = false;
+        } else {
+            moveCounter++;
         }
 
         lastMoved = piece;
@@ -310,5 +330,31 @@ public class ChessGame {
         String key = getPositionKey();
 
         return positionHistory.getOrDefault(key, 0) >= 3;
+    }
+
+    public boolean isFiftyMoveDraw() {
+        return moveCounter >= 100;
+    }
+
+    public boolean offerFiftyMoveDraw() {
+        if (!isFiftyMoveDraw()) {
+            return false;
+        }
+        if (currentTurn.equals("white")) {
+            return !whiteFiftyMoveDraw;
+        }
+        return !blackFiftyMoveDraw;
+    }
+
+    public void declineFiftyMoveDraw() {
+        if (currentTurn.equals("white")) {
+            whiteFiftyMoveDraw = true;
+        } else {
+            blackFiftyMoveDraw = true;
+        }
+    }
+
+    public boolean isSeventyFiveMoveDraw() {
+        return moveCounter >= 150;
     }
 }

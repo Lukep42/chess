@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -265,15 +266,16 @@ public class ChessBoardGUI extends Pane {
 
             boolean moved = game.makeMove(piece, Y, X);
 
-            if (game.isStalemate()) {
-                stalemateMessage(stateMessage);
-            }
-
-            if (game.isCheckmated()) {
-                checkmateMessage(stateMessage);
-            }
-
             if (moved) {
+
+                if (game.isStalemate()) {
+                    stalemateMessage(stateMessage);
+                }
+
+                if (game.isCheckmated()) {
+                    checkmateMessage(stateMessage);
+                }
+
                 if (capturedPiece != null && capturedPiece != selectedPiece) {
                     capturedPiece.setShown(false);
                 }
@@ -299,6 +301,10 @@ public class ChessBoardGUI extends Pane {
 
                 if (game.isThreeRepition()) {
                     ThreeRepitionMessage(stateMessage);
+                }
+
+                if (game.offerFiftyMoveDraw()) {
+                    openDrawChoice();
                 }
             } else {
                 System.out.println("Invalid move");
@@ -346,6 +352,27 @@ public class ChessBoardGUI extends Pane {
                 .bind(heightProperty().divide(2).subtract(checkmateMessage.heightProperty().divide(2)));
 
         getChildren().add(checkmateMessage);
+
+    }
+
+    public void drawMessage(Label drawMessage) {
+        drawMessage = new Label("DRAW");
+        drawMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
+                "-fx-text-fill: white; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 16px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 5px;");
+
+        drawMessage.setLayoutX(0);
+        drawMessage.setLayoutY(0);
+        // Dynamically bind X and Y to the exact center
+        drawMessage.layoutXProperty()
+                .bind(widthProperty().divide(2).subtract(drawMessage.widthProperty().divide(2)));
+        drawMessage.layoutYProperty()
+                .bind(heightProperty().divide(2).subtract(drawMessage.heightProperty().divide(2)));
+
+        getChildren().add(drawMessage);
 
     }
 
@@ -506,6 +533,43 @@ public class ChessBoardGUI extends Pane {
         addPieceIcon(this, newPiece);
         requestLayout();
         window.close();
+    }
+
+    public void openDrawChoice() {
+        StackPane choice = new StackPane();
+        VBox windowLayout = new VBox();
+        HBox buttonLayout = new HBox();
+        Stage newWindow = new Stage();
+        Label description = new Label("Will you accept the draw?");
+        buttonLayout.setSpacing(10);
+        buttonLayout.setAlignment(Pos.CENTER);
+
+        Button acceptButton = new Button();
+        acceptButton.setText("YES");
+        Button declineButton = new Button();
+        declineButton.setText("NO");
+
+        acceptButton.setOnAction(e -> {
+            newWindow.close();
+            drawMessage(stateMessage);
+        });
+        declineButton.setOnAction(e -> {
+            game.declineFiftyMoveDraw();
+            newWindow.close();
+        });
+
+        buttonLayout.getChildren().addAll(acceptButton, declineButton);
+        windowLayout.getChildren().addAll(description, buttonLayout);
+
+        // choice.getChildren().add(buttonLayout);
+        choice.getChildren().add(windowLayout);
+
+        Scene scene = new Scene(choice, 300, 200);
+
+        newWindow.setTitle("Accept Draw");
+        newWindow.setScene(scene);
+
+        newWindow.show();
     }
 
 }
