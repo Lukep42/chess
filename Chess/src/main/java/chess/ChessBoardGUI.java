@@ -306,6 +306,10 @@ public class ChessBoardGUI extends Pane {
                 if (game.offerFiftyMoveDraw()) {
                     openDrawChoice();
                 }
+
+                if (game.isSeventyFiveMoveDraw()) {
+                    drawMessage(stateMessage);
+                }
             } else {
                 System.out.println("Invalid move");
             }

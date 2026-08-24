@@ -355,6 +355,6 @@ public class ChessGame {
     }
 
     public boolean isSeventyFiveMoveDraw() {
-        return moveCounter >= 150;
+        return moveCounter >= 2;
     }
 }
