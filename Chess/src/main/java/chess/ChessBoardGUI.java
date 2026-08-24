@@ -296,6 +296,10 @@ public class ChessBoardGUI extends Pane {
                 movesMade.add(selectedPosition + " -> " + destinationPosition);
                 textArea.clear();
                 textArea.appendText(String.join("\n", movesMade));
+
+                if (game.isThreeRepition()) {
+                    ThreeRepitionMessage(stateMessage);
+                }
             } else {
                 System.out.println("Invalid move");
             }
@@ -342,6 +346,27 @@ public class ChessBoardGUI extends Pane {
                 .bind(heightProperty().divide(2).subtract(checkmateMessage.heightProperty().divide(2)));
 
         getChildren().add(checkmateMessage);
+
+    }
+
+    public void ThreeRepitionMessage(Label ThreeRepitionMessage) {
+        ThreeRepitionMessage = new Label("DRAW - THE POSITION HAS BEEN REPEATED 3 TIMES");
+        ThreeRepitionMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
+                "-fx-text-fill: white; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-font-size: 16px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 5px;");
+
+        ThreeRepitionMessage.setLayoutX(0);
+        ThreeRepitionMessage.setLayoutY(0);
+        // Dynamically bind X and Y to the exact center
+        ThreeRepitionMessage.layoutXProperty()
+                .bind(widthProperty().divide(2).subtract(ThreeRepitionMessage.widthProperty().divide(2)));
+        ThreeRepitionMessage.layoutYProperty()
+                .bind(heightProperty().divide(2).subtract(ThreeRepitionMessage.heightProperty().divide(2)));
+
+        getChildren().add(ThreeRepitionMessage);
 
     }
 

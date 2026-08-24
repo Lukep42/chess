@@ -1,5 +1,14 @@
 package chess;
 
+import java.util.HashMap;
+
+// RULES TO DO
+// 3 REPITION DRAW -> maybe come back
+// 50 MOVE RULE -> if no capture or pawn movement in 50 moves -> claim draw
+// window pop pup -> if no capture or pawn in 75 moves -> auto draw pop up
+// insufficient material -> if king & king, or king & bishop/knight vs king
+// offer draw
+
 public class ChessGame {
     private ChessBoard board;
     private String currentTurn;
@@ -8,10 +17,12 @@ public class ChessGame {
     private int lastMovedOldCol;
     private int lastMovedNewRow;
     private int lastMovedNewCol;
+    private HashMap<String, Integer> positionHistory = new HashMap<>();
 
     public ChessGame() {
         this.board = new ChessBoard();
         this.currentTurn = "white";
+        positionHistory.put(getPositionKey(), 1);
     }
 
     public ChessBoard getBoard() {
@@ -30,7 +41,8 @@ public class ChessGame {
         lastMovedOldCol = -1;
         lastMovedNewRow = -1;
         lastMovedNewCol = -1;
-
+        positionHistory.clear();
+        positionHistory.put(getPositionKey(), 1);
     }
 
     public void setCurrentTurn(String currentTurn) {
@@ -71,6 +83,8 @@ public class ChessGame {
             lastMovedNewRow = piece.getRow();
             lastMovedNewCol = piece.getCol();
             switchTurn();
+            recordPosition();
+
             return true;
 
         }
@@ -89,6 +103,7 @@ public class ChessGame {
             lastMovedNewCol = piece.getCol();
 
             switchTurn();
+            recordPosition();
             return true;
         }
 
@@ -111,6 +126,7 @@ public class ChessGame {
         lastMovedNewCol = piece.getCol();
 
         switchTurn();
+        recordPosition();
 
         if (isChecked()) {
             System.out.println(currentTurn + " is in check");
@@ -252,5 +268,47 @@ public class ChessGame {
             return false;
         }
         return true;
+    }
+
+    private String getPositionKey() {
+        StringBuilder key = new StringBuilder();
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = board.getPiece(row, col);
+                if (piece == null) {
+                    key.append(".");
+                } else {
+                    key.append(piece.getColour().charAt(0));
+
+                    if (piece instanceof King) {
+                        key.append("K");
+                    } else if (piece instanceof Queen) {
+                        key.append("Q");
+                    } else if (piece instanceof Rook) {
+                        key.append("R");
+                    } else if (piece instanceof Bishop) {
+                        key.append("B");
+                    } else if (piece instanceof Knight) {
+                        key.append("KN");
+                    } else {
+                        key.append("P");
+                    }
+                }
+            }
+        }
+        key.append("-").append(currentTurn);
+        return key.toString();
+    }
+
+    private void recordPosition() {
+        String key = getPositionKey();
+        positionHistory.put(key, positionHistory.getOrDefault(key, 0) + 1);
+    }
+
+    public boolean isThreeRepition() {
+        String key = getPositionKey();
+
+        return positionHistory.getOrDefault(key, 0) >= 3;
     }
 }
