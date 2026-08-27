@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 // RULES TO DO
-// 3 REPITION DRAW -> maybe come back
+// 3 Repetition DRAW -> maybe come back
 // offer draw
 
 public class ChessGame {
@@ -20,6 +20,7 @@ public class ChessGame {
     private int moveCounter = 0;
     private boolean whiteFiftyMoveDraw;
     private boolean blackFiftyMoveDraw;
+    private boolean gameOver = false;
 
     public ChessGame() {
         this.board = new ChessBoard();
@@ -35,6 +36,10 @@ public class ChessGame {
         return currentTurn;
     }
 
+    public boolean getGameOver() {
+        return gameOver;
+    }
+
     public void reset() {
         board = new ChessBoard();
         currentTurn = "white";
@@ -48,10 +53,15 @@ public class ChessGame {
         moveCounter = 0;
         whiteFiftyMoveDraw = false;
         blackFiftyMoveDraw = false;
+        gameOver = false;
     }
 
     public void setCurrentTurn(String currentTurn) {
         this.currentTurn = currentTurn;
+    }
+
+    public void setGameOver(Boolean gameOver) {
+        this.gameOver = gameOver;
     }
 
     // check logic
@@ -66,6 +76,10 @@ public class ChessGame {
     public boolean makeMove(Piece piece, int newRow, int newCol) {
         // wrong persons turn
         if (!piece.getColour().equals(currentTurn)) {
+            return false;
+        }
+
+        if (gameOver) {
             return false;
         }
 
@@ -326,7 +340,7 @@ public class ChessGame {
         positionHistory.put(key, positionHistory.getOrDefault(key, 0) + 1);
     }
 
-    public boolean isThreeRepition() {
+    public boolean isThreeRepetition() {
         String key = getPositionKey();
 
         return positionHistory.getOrDefault(key, 0) >= 3;

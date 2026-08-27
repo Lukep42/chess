@@ -32,6 +32,7 @@ public class Chess extends Application {
         // Creating UI Buttons
         var rematchBtn = new Button("Rematch");
         var resignBtn = new Button("Resign");
+        var drawBtn = new Button("Offer Draw");
 
         rematchBtn.setOnAction((event) -> {
             System.out.println("Rematch button pressed");
@@ -54,11 +55,24 @@ public class Chess extends Application {
             board.clearStateMessage();
             board.requestLayout();
             game.setCurrentTurn("white");
+            board.clearMovesMade();
+            textArea.clear();
         });
         resignBtn.setOnAction((event) -> {
+            if (game.getGameOver() == true) {
+                return;
+            }
             System.out.println("Resign button pressed");
             board.resigned();
+            game.setGameOver(true);
 
+        });
+        drawBtn.setOnAction((event) -> {
+            if (game.getGameOver() == true) {
+                return;
+            }
+            System.out.println("Draw button pressed");
+            board.openDrawChoice();
         });
         stage.setOnCloseRequest((event) -> {
             System.out.println("Close button pressed");
@@ -66,15 +80,20 @@ public class Chess extends Application {
 
         // Arranging UI Elements.
         var toolbar = new ToolBar();
-        toolbar.getItems().addAll(rematchBtn, resignBtn);
+        toolbar.getItems().addAll(rematchBtn, resignBtn, drawBtn);
+
+        textArea.setEditable(false);
+        var rightSide = new VBox();
+        rightSide.getChildren().addAll(textArea, toolbar);
+        VBox.setVgrow(textArea, Priority.ALWAYS);
 
         var splitPane = new SplitPane();
-        splitPane.getItems().addAll(board, textArea);
+        splitPane.getItems().addAll(board, rightSide);
         splitPane.setDividerPositions(0.75);
 
         stage.setTitle("Chess");
         var contentPane = new BorderPane();
-        contentPane.setTop(toolbar);
+        // contentPane.setTop(toolbar);
         contentPane.setCenter(splitPane);
 
         var scene = new Scene(contentPane, 1200, 1000);
