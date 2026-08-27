@@ -40,6 +40,18 @@ public class ChessGame {
         return gameOver;
     }
 
+    public Piece getLastMoved() {
+        return lastMoved;
+    }
+
+    public int getLastMovedOldRow() {
+        return lastMovedOldRow;
+    }
+
+    public int getLastMovedOldCol() {
+        return lastMovedOldCol;
+    }
+
     public void reset() {
         board = new ChessBoard();
         currentTurn = "white";

@@ -163,6 +163,24 @@ public class ChessBoardGUI extends Pane {
             }
         }
 
+        // highlight last move made
+        if (game.getLastMoved() != null) {
+            Piece piece = game.getLastMoved();
+            gfx.setFill(Color.rgb(255, 215, 0, 0.40));
+            gfx.fillRect(
+                    game.getLastMovedOldCol() * gridSquareSize,
+                    game.getLastMovedOldRow() * gridSquareSize,
+                    gridSquareSize,
+                    gridSquareSize);
+
+            gfx.setFill(Color.rgb(255, 215, 0, 0.7));
+            gfx.fillRect(
+                    piece.getCol() * gridSquareSize,
+                    piece.getRow() * gridSquareSize,
+                    gridSquareSize,
+                    gridSquareSize);
+        }
+
         // Draw all the images.
         for (var icon : icons) {
             if (icon.isShown()) {
