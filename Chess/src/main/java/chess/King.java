@@ -1,11 +1,9 @@
 package chess;
 
 public class King extends Piece {
-    private boolean inCheck;
 
-    public King(int row, int col, String colour, String imageName, boolean inCheck) {
+    public King(int row, int col, String colour, String imageName) {
         super(row, col, colour, imageName);
-        this.inCheck = inCheck;
     }
 
     @Override

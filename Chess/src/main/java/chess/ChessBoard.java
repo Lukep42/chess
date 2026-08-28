@@ -19,7 +19,7 @@ public class ChessBoard {
         board[0][2] = new Bishop(0, 2, "black", null);
         board[0][5] = new Bishop(0, 5, "black", null);
         board[0][3] = new Queen(0, 3, "black", null);
-        board[0][4] = new King(0, 4, "black", null, false);
+        board[0][4] = new King(0, 4, "black", null);
 
         // pawn setup
         for (int i = 0; i < 8; i++) {
@@ -35,7 +35,7 @@ public class ChessBoard {
         board[7][2] = new Bishop(7, 2, "white", null);
         board[7][5] = new Bishop(7, 5, "white", null);
         board[7][3] = new Queen(7, 3, "white", null);
-        board[7][4] = new King(7, 4, "white", null, false);
+        board[7][4] = new King(7, 4, "white", null);
 
     }
 

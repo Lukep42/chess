@@ -31,34 +31,9 @@ public class Chess extends Application {
         }
 
         // Creating UI Buttons
-        // var rematchBtn = new Button("Rematch");
         var resignBtn = new Button("Resign");
         var drawBtn = new Button("Offer Draw");
 
-        // rematchBtn.setOnAction((event) -> {
-        // System.out.println("Rematch button pressed");
-        // game.reset();
-        // board.getIcons().clear();
-        // ChessBoard newChessBoard = game.getBoard();
-
-        // for (int row = 0; row < 8; row++) {
-        // for (int col = 0; col < 8; col++) {
-        // Piece piece = newChessBoard.getPiece(row, col);
-
-        // if (piece != null) {
-        // addPieceIcon(board, piece);
-        // }
-
-        // }
-
-        // }
-        // board.clearResignedMessage();
-        // board.clearStateMessage();
-        // board.requestLayout();
-        // game.setCurrentTurn("white");
-        // board.clearMovesMade();
-        // textArea.clear();
-        // });
         resignBtn.setOnAction((event) -> {
             if (game.getGameOver() == true) {
                 return;
@@ -81,7 +56,6 @@ public class Chess extends Application {
 
         // Arranging UI Elements.
         var toolbar = new ToolBar();
-        // toolbar.getItems().addAll(rematchBtn, resignBtn, drawBtn);
         toolbar.getItems().addAll(resignBtn, drawBtn);
 
         var movesMadeLabel = new Label("MOVES MADE");
@@ -100,7 +74,6 @@ public class Chess extends Application {
 
         stage.setTitle("Chess");
         var contentPane = new BorderPane();
-        // contentPane.setTop(toolbar);
         contentPane.setCenter(splitPane);
 
         var scene = new Scene(contentPane, 1200, 1000);
@@ -109,7 +82,6 @@ public class Chess extends Application {
     }
 
     private void addPieceIcon(ChessBoardGUI board, Piece piece) {
-
         var image = Chess.class.getClassLoader().getResourceAsStream(piece.getImageName());
 
         if (image != null) {

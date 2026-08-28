@@ -5,7 +5,6 @@ public class Pawn extends Piece {
         super(row, col, colour, imageName);
     }
 
-    // COME BACK FOR EN-PASSANT
     @Override
     public boolean isValidMove(ChessBoard board, int newRow, int newCol) {
         int rowDiff = newRow - getRow();
@@ -18,14 +17,6 @@ public class Pawn extends Piece {
         }
         // target square
         Piece target = board.getPiece(newRow, newCol);
-
-        // // can only move one
-        // if (rowDiff != direction || colDiff != 0) {
-        // // can't go forward if blocked
-        // if (target != null) {
-        // return false;
-        // }
-        // }
 
         // can only move one
         if (rowDiff == direction && colDiff == 0) {
@@ -49,14 +40,6 @@ public class Pawn extends Piece {
         if (rowDiff == direction && colDiff == 1) {
             return target != null && !target.getColour().equals(getColour());
         }
-
-        // // can't capture own piece
-        // if (target != null && target.getColour().equals(getColour())) {
-        // return false;
-        // }
-
-        // valid move
-        // return isCollision(board, newRow, newCol, rowDiff, colDiff);
         return false;
     }
 

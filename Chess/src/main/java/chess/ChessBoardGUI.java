@@ -1,8 +1,5 @@
 package chess;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.*;
@@ -19,7 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.util.*;
 
@@ -30,21 +26,10 @@ public class ChessBoardGUI extends Pane {
     private List<PieceIcon> icons = new ArrayList<>();
     private Canvas canvas;
     private PieceIcon selectedPiece = null;
-    // private ChessBoard board;
     private List<String> movesMade = new ArrayList<>();
     private TextArea textArea;
     private String selectedPosition;
     private ChessGame game;
-    // private Label resignMessage;
-    // private Label stateMessage;
-
-    // public ChessBoardGUI(double gridWidth, double gridHeight, ChessBoard board,
-    // TextArea textArea) {
-    // this.gridWidth = gridWidth;
-    // this.gridHeight = gridHeight;
-    // this.board = board;
-    // this.textArea = textArea;
-    // }
 
     public ChessBoardGUI(double gridWidth, double gridHeight, ChessGame game, TextArea textArea) {
         this.gridWidth = gridWidth;
@@ -89,7 +74,6 @@ public class ChessBoardGUI extends Pane {
         for (int row = 0; row < gridHeight; row++) {
             for (int col = 0; col < gridWidth; col++) {
                 if ((row + col) % 2 == 0) {
-                    // gfx.setFill(Color.WHITE);
                     gfx.setFill(Color.rgb(234, 206, 153));
 
                     gfx.fillRect(
@@ -98,7 +82,6 @@ public class ChessBoardGUI extends Pane {
                             gridSquareSize,
                             gridSquareSize);
                 } else {
-                    // gfx.setFill(Color.GRAY);
                     gfx.setFill(Color.rgb(125, 74, 11));
 
                     gfx.fillRect(
@@ -401,20 +384,6 @@ public class ChessBoardGUI extends Pane {
         gameOverLayout("RESIGNATION", game.getCurrentTurn().toUpperCase() + " RESIGNS");
     }
 
-    // public void clearResignedMessage() {
-    // if (resignMessage != null) {
-    // getChildren().remove(resignMessage);
-    // resignMessage = null;
-    // }
-    // }
-
-    // public void clearStateMessage() {
-    // if (stateMessage != null) {
-    // getChildren().remove(stateMessage);
-    // stateMessage = null;
-    // }
-    // }
-
     public void clearMovesMade() {
         movesMade.clear();
     }
@@ -581,8 +550,6 @@ public class ChessBoardGUI extends Pane {
             }
 
         }
-        // clearResignedMessage();
-        // clearStateMessage();
         requestLayout();
         game.setCurrentTurn("white");
         clearMovesMade();

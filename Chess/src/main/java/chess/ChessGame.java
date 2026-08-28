@@ -193,7 +193,6 @@ public class ChessGame {
         int oldRow = piece.getRow();
         int oldCol = piece.getCol();
 
-        // Piece capturedPiece = board.makeTemporaryMove(piece, newRow, newCol);
         Piece capturedPiece = null;
         int capturedRow = -1;
         int capturedCol = -1;
@@ -230,10 +229,6 @@ public class ChessGame {
                 for (int col = 0; col < 8; col++) {
                     boolean validMove = piece.isValidMove(board, row, col);
                     boolean enPassant = piece instanceof Pawn && isEnPassant(piece, row, col);
-
-                    // if (!piece.isValidMove(board, row, col)) {
-                    // continue;
-                    // }
                     if (!validMove && !enPassant) {
                         continue;
                     }
@@ -262,9 +257,6 @@ public class ChessGame {
                     if (!validMove && !enPassant) {
                         continue;
                     }
-                    // if (!piece.isValidMove(board, row, col)) {
-                    // continue;
-                    // }
 
                     if (wouldCheck(piece, row, col)) {
                         continue;
