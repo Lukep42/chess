@@ -33,8 +33,8 @@ public class ChessBoardGUI extends Pane {
     private TextArea textArea;
     private String selectedPosition;
     private ChessGame game;
-    private Label resignMessage;
-    private Label stateMessage;
+    // private Label resignMessage;
+    // private Label stateMessage;
 
     // public ChessBoardGUI(double gridWidth, double gridHeight, ChessBoard board,
     // TextArea textArea) {
@@ -87,7 +87,8 @@ public class ChessBoardGUI extends Pane {
         for (int row = 0; row < gridHeight; row++) {
             for (int col = 0; col < gridWidth; col++) {
                 if ((row + col) % 2 == 0) {
-                    gfx.setFill(Color.WHITE);
+                    // gfx.setFill(Color.WHITE);
+                    gfx.setFill(Color.rgb(234, 206, 153));
 
                     gfx.fillRect(
                             col * gridSquareSize,
@@ -95,7 +96,8 @@ public class ChessBoardGUI extends Pane {
                             gridSquareSize,
                             gridSquareSize);
                 } else {
-                    gfx.setFill(Color.GRAY);
+                    // gfx.setFill(Color.GRAY);
+                    gfx.setFill(Color.rgb(125, 74, 11));
 
                     gfx.fillRect(
                             col * gridSquareSize,
@@ -104,6 +106,24 @@ public class ChessBoardGUI extends Pane {
                             gridSquareSize);
                 }
             }
+        }
+
+        // highlight last move made
+        if (game.getLastMoved() != null) {
+            Piece piece = game.getLastMoved();
+            gfx.setFill(Color.rgb(255, 215, 0, 0.40));
+            gfx.fillRect(
+                    game.getLastMovedOldCol() * gridSquareSize,
+                    game.getLastMovedOldRow() * gridSquareSize,
+                    gridSquareSize,
+                    gridSquareSize);
+
+            gfx.setFill(Color.rgb(255, 215, 0, 0.5));
+            gfx.fillRect(
+                    piece.getCol() * gridSquareSize,
+                    piece.getRow() * gridSquareSize,
+                    gridSquareSize,
+                    gridSquareSize);
         }
 
         if (game.isChecked()) {
@@ -162,25 +182,6 @@ public class ChessBoardGUI extends Pane {
                 }
             }
         }
-
-        // highlight last move made
-        if (game.getLastMoved() != null) {
-            Piece piece = game.getLastMoved();
-            gfx.setFill(Color.rgb(255, 215, 0, 0.40));
-            gfx.fillRect(
-                    game.getLastMovedOldCol() * gridSquareSize,
-                    game.getLastMovedOldRow() * gridSquareSize,
-                    gridSquareSize,
-                    gridSquareSize);
-
-            gfx.setFill(Color.rgb(255, 215, 0, 0.7));
-            gfx.fillRect(
-                    piece.getCol() * gridSquareSize,
-                    piece.getRow() * gridSquareSize,
-                    gridSquareSize,
-                    gridSquareSize);
-        }
-
         // Draw all the images.
         for (var icon : icons) {
             if (icon.isShown()) {
@@ -347,121 +348,40 @@ public class ChessBoardGUI extends Pane {
     }
 
     public void stalemateMessage() {
-        stateMessage = new Label("STALEMATE " + game.getCurrentTurn().toUpperCase() + " LOSES");
-        stateMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
-                "-fx-text-fill: white; " +
-                "-fx-padding: 10px 20px; " +
-                "-fx-font-size: 16px; " +
-                "-fx-font-weight: bold; " +
-                "-fx-background-radius: 5px;");
+        gameOverLayout("STALEMATE", "DRAW - STALEMATE");
 
-        stateMessage.setLayoutX(0);
-        stateMessage.setLayoutY(0);
-        // Dynamically bind X and Y to the exact center
-        stateMessage.layoutXProperty()
-                .bind(widthProperty().divide(2).subtract(stateMessage.widthProperty().divide(2)));
-        stateMessage.layoutYProperty()
-                .bind(heightProperty().divide(2).subtract(stateMessage.heightProperty().divide(2)));
-
-        getChildren().add(stateMessage);
     }
 
     public void checkmateMessage() {
-        stateMessage = new Label("CHECKMATE " + game.getCurrentTurn().toUpperCase() + " LOSES");
-        stateMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
-                "-fx-text-fill: white; " +
-                "-fx-padding: 10px 20px; " +
-                "-fx-font-size: 16px; " +
-                "-fx-font-weight: bold; " +
-                "-fx-background-radius: 5px;");
-
-        stateMessage.setLayoutX(0);
-        stateMessage.setLayoutY(0);
-        // Dynamically bind X and Y to the exact center
-        stateMessage.layoutXProperty()
-                .bind(widthProperty().divide(2).subtract(stateMessage.widthProperty().divide(2)));
-        stateMessage.layoutYProperty()
-                .bind(heightProperty().divide(2).subtract(stateMessage.heightProperty().divide(2)));
-
-        getChildren().add(stateMessage);
-
+        gameOverLayout("CHECKMATE", "CHECKMATE, " + game.getCurrentTurn().toUpperCase() + " LOSES");
     }
 
     public void drawMessage() {
-        stateMessage = new Label("DRAW");
-        stateMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
-                "-fx-text-fill: white; " +
-                "-fx-padding: 10px 20px; " +
-                "-fx-font-size: 16px; " +
-                "-fx-font-weight: bold; " +
-                "-fx-background-radius: 5px;");
-
-        stateMessage.setLayoutX(0);
-        stateMessage.setLayoutY(0);
-        // Dynamically bind X and Y to the exact center
-        stateMessage.layoutXProperty()
-                .bind(widthProperty().divide(2).subtract(stateMessage.widthProperty().divide(2)));
-        stateMessage.layoutYProperty()
-                .bind(heightProperty().divide(2).subtract(stateMessage.heightProperty().divide(2)));
-
-        getChildren().add(stateMessage);
+        gameOverLayout("DRAW", "DRAW BY AGREEMENT");
 
     }
 
     public void ThreeRepetitionMessage() {
-        stateMessage = new Label("DRAW - THE POSITION HAS BEEN REPEATED 3 TIMES");
-        stateMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
-                "-fx-text-fill: white; " +
-                "-fx-padding: 10px 20px; " +
-                "-fx-font-size: 16px; " +
-                "-fx-font-weight: bold; " +
-                "-fx-background-radius: 5px;");
-
-        stateMessage.setLayoutX(0);
-        stateMessage.setLayoutY(0);
-        // Dynamically bind X and Y to the exact center
-        stateMessage.layoutXProperty()
-                .bind(widthProperty().divide(2).subtract(stateMessage.widthProperty().divide(2)));
-        stateMessage.layoutYProperty()
-                .bind(heightProperty().divide(2).subtract(stateMessage.heightProperty().divide(2)));
-
-        getChildren().add(stateMessage);
-
+        gameOverLayout("DRAW", "DRAW - POSITION HAS BEEN REPEATED 3 TIMES");
     }
 
     public void resigned() {
-        resignMessage = new Label("GAME OVER  " + game.getCurrentTurn().toUpperCase() + " RESIGNS");
-        resignMessage.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75); " +
-                "-fx-text-fill: white; " +
-                "-fx-padding: 10px 20px; " +
-                "-fx-font-size: 16px; " +
-                "-fx-font-weight: bold; " +
-                "-fx-background-radius: 5px;");
-
-        resignMessage.setLayoutX(0);
-        resignMessage.setLayoutY(0);
-        // Dynamically bind X and Y to the exact center
-        resignMessage.layoutXProperty()
-                .bind(widthProperty().divide(2).subtract(resignMessage.widthProperty().divide(2)));
-        resignMessage.layoutYProperty()
-                .bind(heightProperty().divide(2).subtract(resignMessage.heightProperty().divide(2)));
-
-        getChildren().add(resignMessage);
+        gameOverLayout("RESIGNATION", game.getCurrentTurn().toUpperCase() + " RESIGNS");
     }
 
-    public void clearResignedMessage() {
-        if (resignMessage != null) {
-            getChildren().remove(resignMessage);
-            resignMessage = null;
-        }
-    }
+    // public void clearResignedMessage() {
+    // if (resignMessage != null) {
+    // getChildren().remove(resignMessage);
+    // resignMessage = null;
+    // }
+    // }
 
-    public void clearStateMessage() {
-        if (stateMessage != null) {
-            getChildren().remove(stateMessage);
-            stateMessage = null;
-        }
-    }
+    // public void clearStateMessage() {
+    // if (stateMessage != null) {
+    // getChildren().remove(stateMessage);
+    // stateMessage = null;
+    // }
+    // }
 
     public void clearMovesMade() {
         movesMade.clear();
@@ -579,6 +499,9 @@ public class ChessBoardGUI extends Pane {
         Label description = new Label("Will you accept the draw?");
         buttonLayout.setSpacing(10);
         buttonLayout.setAlignment(Pos.CENTER);
+        windowLayout.setAlignment(Pos.CENTER);
+        windowLayout.setSpacing(10);
+        description.setStyle("-fx-font-weight:bold; -fx-font-size: 24px ");
 
         Button acceptButton = new Button();
         acceptButton.setText("YES");
@@ -605,6 +528,65 @@ public class ChessBoardGUI extends Pane {
         Scene scene = new Scene(choice, 300, 200);
 
         newWindow.setTitle("Accept Draw");
+        newWindow.setScene(scene);
+
+        newWindow.show();
+    }
+
+    public void rematch() {
+        game.reset();
+        getIcons().clear();
+        ChessBoard newChessBoard = game.getBoard();
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = newChessBoard.getPiece(row, col);
+
+                if (piece != null) {
+                    addPieceIcon(this, piece);
+                }
+
+            }
+
+        }
+        // clearResignedMessage();
+        // clearStateMessage();
+        requestLayout();
+        game.setCurrentTurn("white");
+        clearMovesMade();
+        textArea.clear();
+
+    }
+
+    public void gameOverLayout(String title, String inDescription) {
+        StackPane choice = new StackPane();
+        VBox windowLayout = new VBox();
+        HBox buttonLayout = new HBox();
+        Stage newWindow = new Stage();
+        Label description = new Label(inDescription);
+        buttonLayout.setSpacing(10);
+        buttonLayout.setAlignment(Pos.CENTER);
+        windowLayout.setAlignment(Pos.CENTER);
+        windowLayout.setSpacing(10);
+        description.setStyle("-fx-font-weight:bold; -fx-font-size: 24px ");
+
+        Button rematchButton = new Button();
+        rematchButton.setText("Rematch");
+        rematchButton.setOnAction(e -> {
+            newWindow.close();
+            rematch();
+            game.setGameOver(false);
+            newWindow.close();
+        });
+
+        buttonLayout.getChildren().addAll(rematchButton);
+        windowLayout.getChildren().addAll(description, buttonLayout);
+
+        choice.getChildren().add(windowLayout);
+
+        Scene scene = new Scene(choice, 300, 200);
+
+        newWindow.setTitle(title);
         newWindow.setScene(scene);
 
         newWindow.show();
