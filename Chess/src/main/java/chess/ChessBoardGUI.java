@@ -16,6 +16,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -182,6 +184,9 @@ public class ChessBoardGUI extends Pane {
                 }
             }
         }
+
+        drawCoordinates(gfx);
+
         // Draw all the images.
         for (var icon : icons) {
             if (icon.isShown()) {
@@ -227,6 +232,30 @@ public class ChessBoardGUI extends Pane {
                 displayedPixelWidth,
                 displayedPixelHeight);
         gfx.restore();
+    }
+
+    private void drawCoordinates(GraphicsContext gfx) {
+        String[] columns = { "a", "b", "c", "d", "e", "f", "g", "h" };
+
+        // gfx.setFont(javafx.scene.text.Font.font());
+        gfx.setFont(Font.font("Arial", FontWeight.BOLD, 0.2 * gridSquareSize));
+        gfx.setFill(Color.BLACK);
+
+        for (int row = 0; row < 8; row++) {
+            double x = 5;
+            double y = (row + 0.2) * gridSquareSize;
+
+            gfx.fillText(String.valueOf(8 - row), x, y);
+
+        }
+
+        for (int col = 0; col < 8; col++) {
+            double x = (col + .9) * gridSquareSize;
+            double y = 8 * gridSquareSize - 5;
+
+            gfx.fillText(columns[col], x - 5, y);
+        }
+
     }
 
     private void squareClicked(double clickedX, double clickedY) {
