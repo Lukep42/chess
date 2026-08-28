@@ -345,9 +345,12 @@ public class ChessBoardGUI extends Pane {
                 }
 
                 destinationPosition = columns[X] + ((int) gridHeight - Y);
-                movesMade.add(selectedPosition + " -> " + destinationPosition);
+                movesMade.add(selectedPosition + " \t " + destinationPosition);
                 textArea.clear();
-                textArea.appendText(String.join("\n", movesMade));
+                for (int i = 0; i < movesMade.size(); i++) {
+                    // textArea.appendText(String.join("\n", movesMade));
+                    textArea.appendText((i + 1) + ". " + movesMade.get(i) + "\n");
+                }
 
                 if (game.isThreeRepetition()) {
                     ThreeRepetitionMessage();

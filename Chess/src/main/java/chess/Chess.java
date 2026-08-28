@@ -1,6 +1,7 @@
 package chess;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -83,9 +84,14 @@ public class Chess extends Application {
         // toolbar.getItems().addAll(rematchBtn, resignBtn, drawBtn);
         toolbar.getItems().addAll(resignBtn, drawBtn);
 
+        var movesMadeLabel = new Label("MOVES MADE");
+        movesMadeLabel.setStyle("-fx-font-size: 18 px; -fx-font-weight: bold;");
+        movesMadeLabel.setMaxWidth(Double.MAX_VALUE);
+        movesMadeLabel.setAlignment(Pos.CENTER);
+
         textArea.setEditable(false);
         var rightSide = new VBox();
-        rightSide.getChildren().addAll(textArea, toolbar);
+        rightSide.getChildren().addAll(movesMadeLabel, textArea, toolbar);
         VBox.setVgrow(textArea, Priority.ALWAYS);
 
         var splitPane = new SplitPane();
