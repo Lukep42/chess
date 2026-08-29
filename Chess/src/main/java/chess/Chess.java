@@ -19,12 +19,13 @@ public class Chess extends Application {
         ChessBoardGUI board = new ChessBoardGUI(8, 8, game, textArea);
         ChessBoard chessBoard = game.getBoard();
 
+        // add piece icons to the board
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 Piece piece = chessBoard.getPiece(row, col);
 
                 if (piece != null) {
-                    addPieceIcon(board, piece);
+                    board.addPieceIcon(piece);
                 }
 
             }
@@ -34,6 +35,7 @@ public class Chess extends Application {
         var resignBtn = new Button("Resign");
         var drawBtn = new Button("Offer Draw");
 
+        // Button functionality
         resignBtn.setOnAction((event) -> {
             if (game.getGameOver() == true) {
                 return;
@@ -79,20 +81,5 @@ public class Chess extends Application {
         var scene = new Scene(contentPane, 1200, 1000);
         stage.setScene(scene);
         stage.show();
-    }
-
-    private void addPieceIcon(ChessBoardGUI board, Piece piece) {
-        var image = Chess.class.getClassLoader().getResourceAsStream(piece.getImageName());
-
-        if (image != null) {
-            board.getIcons().add(new PieceIcon(
-                    piece.getCol(),
-                    piece.getRow(),
-                    image,
-                    piece));
-        } else {
-            System.out.println("Could not load image: " + piece.getImageName());
-        }
-
     }
 }

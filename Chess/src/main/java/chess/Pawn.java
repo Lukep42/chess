@@ -50,7 +50,6 @@ public class Pawn extends Piece {
 
     }
 
-    // can't have a collision
     @Override
     public boolean isCollision(ChessBoard board, int newRow, int newCol, int rowDiff, int colDiff) {
 

@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-// RULES TO DO
-// 3 Repetition DRAW -> maybe come back
-// offer draw
-
 public class ChessGame {
     private ChessBoard board;
     private String currentTurn;
@@ -72,7 +68,7 @@ public class ChessGame {
         this.currentTurn = currentTurn;
     }
 
-    public void setGameOver(Boolean gameOver) {
+    public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
 
@@ -96,32 +92,7 @@ public class ChessGame {
         }
 
         if (piece instanceof Pawn && isEnPassant(piece, newRow, newCol)) {
-            if (wouldCheck(piece, newRow, newCol)) {
-                return false;
-            }
-            int oldRow = piece.getRow();
-            int oldCol = piece.getCol();
-
-            board.setPiece(oldRow, newCol, null);
-            boolean moved = board.movePiece(piece, newRow, newCol);
-            if (!moved) {
-                return false;
-            }
-
-            lastMoved = piece;
-            lastMovedOldRow = oldRow;
-            lastMovedOldCol = oldCol;
-            lastMovedNewRow = piece.getRow();
-            lastMovedNewCol = piece.getCol();
-            moveCounter = 0;
-            whiteFiftyMoveDraw = false;
-            blackFiftyMoveDraw = false;
-
-            switchTurn();
-            recordPosition();
-
-            return true;
-
+            return moveEnPassant(piece, newRow, newCol);
         }
 
         // invalid move
@@ -130,17 +101,7 @@ public class ChessGame {
         }
 
         if (piece instanceof King && Math.abs(newCol - piece.getCol()) == 2) {
-            lastMovedOldRow = piece.getRow();
-            lastMovedOldCol = piece.getCol();
-            board.castleMove(piece, newRow, newCol);
-            lastMoved = piece;
-            lastMovedNewRow = piece.getRow();
-            lastMovedNewCol = piece.getCol();
-            moveCounter++;
-
-            switchTurn();
-            recordPosition();
-            return true;
+            return moveCastling(piece, newRow, newCol);
         }
 
         // king would be in check
@@ -148,6 +109,10 @@ public class ChessGame {
             return false;
         }
 
+        return makeNormalMove(piece, newRow, newCol);
+    }
+
+    private boolean makeNormalMove(Piece piece, int newRow, int newCol) {
         lastMovedOldRow = piece.getRow();
         lastMovedOldCol = piece.getCol();
         // make the move
@@ -181,7 +146,7 @@ public class ChessGame {
         return true;
     }
 
-    public void switchTurn() {
+    private void switchTurn() {
         if (currentTurn.equals("white")) {
             currentTurn = "black";
         } else {
@@ -206,6 +171,7 @@ public class ChessGame {
             board.setPiece(capturedRow, capturedCol, null);
         }
 
+        // Temporarily make the move to determine if it leaves the king vulnerable
         Piece normalCapturedPiece = board.makeTemporaryMove(piece, newRow, newCol);
 
         boolean inCheck = isChecked();
@@ -220,40 +186,19 @@ public class ChessGame {
     }
 
     public boolean isCheckmated() {
-        if (!isChecked()) {
-            return false;
-        }
-
-        for (Piece piece : board.getPieces(currentTurn)) {
-            for (int row = 0; row < 8; row++) {
-                for (int col = 0; col < 8; col++) {
-                    boolean validMove = piece.isValidMove(board, row, col);
-                    boolean enPassant = piece instanceof Pawn && isEnPassant(piece, row, col);
-                    if (!validMove && !enPassant) {
-                        continue;
-                    }
-
-                    if (wouldCheck(piece, row, col)) {
-                        continue;
-                    }
-                    return false;
-                }
-            }
-        }
-        return true;
+        return isChecked() && !hasLegalMove();
     }
 
     public boolean isStalemate() {
-        if (isChecked()) {
-            return false;
-        }
+        return !isChecked() && !hasLegalMove();
+    }
 
+    private boolean hasLegalMove() {
         for (Piece piece : board.getPieces(currentTurn)) {
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 8; col++) {
                     boolean validMove = piece.isValidMove(board, row, col);
                     boolean enPassant = piece instanceof Pawn && isEnPassant(piece, row, col);
-
                     if (!validMove && !enPassant) {
                         continue;
                     }
@@ -261,11 +206,11 @@ public class ChessGame {
                     if (wouldCheck(piece, row, col)) {
                         continue;
                     }
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     public boolean isEnPassant(Piece pawn, int newRow, int newCol) {
@@ -305,6 +250,49 @@ public class ChessGame {
         if (lastMovedNewCol != lastMovedOldCol) {
             return false;
         }
+        return true;
+    }
+
+    public boolean moveEnPassant(Piece piece, int newRow, int newCol) {
+        if (wouldCheck(piece, newRow, newCol)) {
+            return false;
+        }
+        int oldRow = piece.getRow();
+        int oldCol = piece.getCol();
+
+        board.setPiece(oldRow, newCol, null);
+        boolean moved = board.movePiece(piece, newRow, newCol);
+        if (!moved) {
+            return false;
+        }
+
+        lastMoved = piece;
+        lastMovedOldRow = oldRow;
+        lastMovedOldCol = oldCol;
+        lastMovedNewRow = piece.getRow();
+        lastMovedNewCol = piece.getCol();
+        moveCounter = 0;
+        whiteFiftyMoveDraw = false;
+        blackFiftyMoveDraw = false;
+
+        switchTurn();
+        recordPosition();
+
+        return true;
+
+    }
+
+    public boolean moveCastling(Piece piece, int newRow, int newCol) {
+        lastMovedOldRow = piece.getRow();
+        lastMovedOldCol = piece.getCol();
+        board.castleMove(piece, newRow, newCol);
+        lastMoved = piece;
+        lastMovedNewRow = piece.getRow();
+        lastMovedNewCol = piece.getCol();
+        moveCounter++;
+
+        switchTurn();
+        recordPosition();
         return true;
     }
 

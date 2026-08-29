@@ -70,103 +70,13 @@ public class ChessBoardGUI extends Pane {
         gridSquareSize = Math.min(getWidth() / gridWidth,
                 getHeight() / gridHeight);
 
-        // Create checkerboard pattern
-        for (int row = 0; row < gridHeight; row++) {
-            for (int col = 0; col < gridWidth; col++) {
-                if ((row + col) % 2 == 0) {
-                    gfx.setFill(Color.rgb(234, 206, 153));
+        drawBoard(gfx);
 
-                    gfx.fillRect(
-                            col * gridSquareSize,
-                            row * gridSquareSize,
-                            gridSquareSize,
-                            gridSquareSize);
-                } else {
-                    gfx.setFill(Color.rgb(125, 74, 11));
+        drawLastMove(gfx);
 
-                    gfx.fillRect(
-                            col * gridSquareSize,
-                            row * gridSquareSize,
-                            gridSquareSize,
-                            gridSquareSize);
-                }
-            }
-        }
+        drawCheck(gfx);
 
-        // highlight last move made
-        if (game.getLastMoved() != null) {
-            Piece piece = game.getLastMoved();
-            gfx.setFill(Color.rgb(255, 215, 0, 0.40));
-            gfx.fillRect(
-                    game.getLastMovedOldCol() * gridSquareSize,
-                    game.getLastMovedOldRow() * gridSquareSize,
-                    gridSquareSize,
-                    gridSquareSize);
-
-            gfx.setFill(Color.rgb(255, 215, 0, 0.5));
-            gfx.fillRect(
-                    piece.getCol() * gridSquareSize,
-                    piece.getRow() * gridSquareSize,
-                    gridSquareSize,
-                    gridSquareSize);
-        }
-
-        if (game.isChecked()) {
-            String currentTurn = game.getCurrentTurn();
-            for (PieceIcon icon : icons) {
-                Piece piece = icon.getPiece();
-
-                if (icon.isShown() && piece instanceof King && piece.getColour().equals(currentTurn)) {
-                    gfx.setFill(Color.rgb(255, 0, 0, 0.5));
-
-                    gfx.fillRect(icon.getX() * gridSquareSize, icon.getY() * gridSquareSize, gridSquareSize,
-                            gridSquareSize);
-
-                    break;
-                }
-            }
-
-        }
-
-        if (selectedPiece != null) {
-            Piece piece = selectedPiece.getPiece();
-            ChessBoard board = game.getBoard();
-
-            for (int row = 0; row < gridHeight; row++) {
-                for (int col = 0; col < gridWidth; col++) {
-                    boolean normalMove = piece.isValidMove(board, row, col);
-
-                    boolean enPassantMove = piece instanceof Pawn && game.isEnPassant(piece, row, col);
-
-                    if ((normalMove || enPassantMove) && !game.wouldCheck(piece, row, col)) {
-                        double centerX = (col + 0.5) * gridSquareSize;
-                        double centerY = (row + 0.5) * gridSquareSize;
-
-                        Piece targetPiece = board.getPiece(row, col);
-                        if (targetPiece != null && !targetPiece.getColour().equals(piece.getColour())) {
-                            gfx.setStroke(Color.rgb(255, 0, 0, 0.5));
-                            gfx.setLineWidth(gridSquareSize * 0.08);
-
-                            double radius = gridSquareSize * 0.35;
-
-                            gfx.strokeOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
-                        } else if (enPassantMove) {
-                            gfx.setStroke(Color.rgb(255, 0, 0, 0.5));
-                            gfx.setLineWidth(gridSquareSize * 0.08);
-                            double radius = gridSquareSize * 0.35;
-                            gfx.strokeOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
-                        } else {
-                            gfx.setFill(Color.rgb(0, 0, 0, 0.5));
-
-                            double radius = gridSquareSize / 7;
-
-                            gfx.fillOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
-                        }
-                    }
-
-                }
-            }
-        }
+        drawValidMoves(gfx);
 
         drawCoordinates(gfx);
 
@@ -215,6 +125,114 @@ public class ChessBoardGUI extends Pane {
                 displayedPixelWidth,
                 displayedPixelHeight);
         gfx.restore();
+    }
+
+    private void drawBoard(GraphicsContext gfx) {
+        // Create checkerboard pattern
+        for (int row = 0; row < gridHeight; row++) {
+            for (int col = 0; col < gridWidth; col++) {
+                if ((row + col) % 2 == 0) {
+                    gfx.setFill(Color.rgb(234, 206, 153));
+
+                    gfx.fillRect(
+                            col * gridSquareSize,
+                            row * gridSquareSize,
+                            gridSquareSize,
+                            gridSquareSize);
+                } else {
+                    gfx.setFill(Color.rgb(125, 74, 11));
+
+                    gfx.fillRect(
+                            col * gridSquareSize,
+                            row * gridSquareSize,
+                            gridSquareSize,
+                            gridSquareSize);
+                }
+            }
+        }
+    }
+
+    private void drawLastMove(GraphicsContext gfx) {
+        // // highlight last move made
+        if (game.getLastMoved() != null) {
+            Piece piece = game.getLastMoved();
+            gfx.setFill(Color.rgb(255, 215, 0, 0.40));
+            gfx.fillRect(
+                    game.getLastMovedOldCol() * gridSquareSize,
+                    game.getLastMovedOldRow() * gridSquareSize,
+                    gridSquareSize,
+                    gridSquareSize);
+
+            gfx.setFill(Color.rgb(255, 215, 0, 0.5));
+            gfx.fillRect(
+                    piece.getCol() * gridSquareSize,
+                    piece.getRow() * gridSquareSize,
+                    gridSquareSize,
+                    gridSquareSize);
+        }
+    }
+
+    private void drawCheck(GraphicsContext gfx) {
+        // set square to red if in check
+        if (game.isChecked()) {
+            String currentTurn = game.getCurrentTurn();
+            for (PieceIcon icon : icons) {
+                Piece piece = icon.getPiece();
+
+                if (icon.isShown() && piece instanceof King && piece.getColour().equals(currentTurn)) {
+                    gfx.setFill(Color.rgb(255, 0, 0, 0.5));
+
+                    gfx.fillRect(icon.getX() * gridSquareSize, icon.getY() * gridSquareSize, gridSquareSize,
+                            gridSquareSize);
+
+                    break;
+                }
+            }
+
+        }
+    }
+
+    private void drawValidMoves(GraphicsContext gfx) {
+        // show valid moves
+        if (selectedPiece != null) {
+            Piece piece = selectedPiece.getPiece();
+            ChessBoard board = game.getBoard();
+
+            for (int row = 0; row < gridHeight; row++) {
+                for (int col = 0; col < gridWidth; col++) {
+                    boolean normalMove = piece.isValidMove(board, row, col);
+
+                    boolean enPassantMove = piece instanceof Pawn && game.isEnPassant(piece, row, col);
+
+                    if ((normalMove || enPassantMove) && !game.wouldCheck(piece, row, col)) {
+                        double centerX = (col + 0.5) * gridSquareSize;
+                        double centerY = (row + 0.5) * gridSquareSize;
+
+                        Piece targetPiece = board.getPiece(row, col);
+                        if (targetPiece != null && !targetPiece.getColour().equals(piece.getColour())) {
+                            gfx.setStroke(Color.rgb(255, 0, 0, 0.5));
+                            gfx.setLineWidth(gridSquareSize * 0.08);
+
+                            double radius = gridSquareSize * 0.35;
+
+                            gfx.strokeOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
+                        } else if (enPassantMove) {
+                            gfx.setStroke(Color.rgb(255, 0, 0, 0.5));
+                            gfx.setLineWidth(gridSquareSize * 0.08);
+                            double radius = gridSquareSize * 0.35;
+                            gfx.strokeOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
+                        } else {
+                            gfx.setFill(Color.rgb(0, 0, 0, 0.5));
+
+                            double radius = gridSquareSize / 7;
+
+                            gfx.fillOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
+                        }
+                    }
+
+                }
+            }
+        }
     }
 
     private void drawCoordinates(GraphicsContext gfx) {
@@ -299,34 +317,11 @@ public class ChessBoardGUI extends Pane {
 
             if (moved) {
 
-                if (game.isStalemate()) {
-                    stalemateMessage();
-                    game.setGameOver(true);
-                }
+                checkmateOrStalemate();
 
-                if (game.isCheckmated()) {
-                    checkmateMessage();
-                    game.setGameOver(true);
-                }
+                updateBoardAfterMove(piece, capturedPiece, enPassantCapture, oldX, oldY, X, Y);
 
-                if (capturedPiece != null && capturedPiece != selectedPiece) {
-                    capturedPiece.setShown(false);
-                }
-
-                if (enPassantCapture != null) {
-                    enPassantCapture.setShown(false);
-                }
-
-                selectedPiece.setPosition(X, Y);
-
-                if (piece instanceof King && Math.abs(X - oldX) == 2) {
-                    updateCastlingIcon(piece, oldX, oldY, X);
-                }
-
-                if (piece instanceof Pawn && (Y == 7 || Y == 0)) {
-                    openPromotionChoice(piece);
-                }
-
+                // updates moves made list
                 destinationPosition = columns[X] + ((int) gridHeight - Y);
                 movesMade.add(selectedPosition + " \t " + destinationPosition);
                 textArea.clear();
@@ -335,25 +330,7 @@ public class ChessBoardGUI extends Pane {
                     textArea.appendText((i + 1) + ". " + movesMade.get(i) + "\n");
                 }
 
-                if (game.isThreeRepetition()) {
-                    ThreeRepetitionMessage();
-                    game.setGameOver(true);
-
-                }
-
-                if (game.offerFiftyMoveDraw()) {
-                    openDrawChoice();
-                }
-
-                if (game.isSeventyFiveMoveDraw()) {
-                    drawMessage();
-                    game.setGameOver(true);
-
-                }
-                if (game.isInsufficientMaterial()) {
-                    drawMessage();
-                    game.setGameOver(true);
-                }
+                checkDrawConditions();
             } else {
                 System.out.println("Invalid move");
             }
@@ -362,9 +339,63 @@ public class ChessBoardGUI extends Pane {
         }
     }
 
+    private void checkmateOrStalemate() {
+        if (game.isStalemate()) {
+            stalemateMessage();
+            game.setGameOver(true);
+        }
+
+        if (game.isCheckmated()) {
+            checkmateMessage();
+            game.setGameOver(true);
+        }
+    }
+
+    private void updateBoardAfterMove(Piece piece, PieceIcon capturedPiece, PieceIcon enPassantCapture, int oldX,
+            int oldY, int X, int Y) {
+        if (capturedPiece != null && capturedPiece != selectedPiece) {
+            capturedPiece.setShown(false);
+        }
+
+        if (enPassantCapture != null) {
+            enPassantCapture.setShown(false);
+        }
+
+        selectedPiece.setPosition(X, Y);
+
+        if (piece instanceof King && Math.abs(X - oldX) == 2) {
+            updateCastlingIcon(piece, oldX, oldY, X);
+        }
+
+        if (piece instanceof Pawn && (Y == 7 || Y == 0)) {
+            openPromotionChoice(piece);
+        }
+    }
+
+    private void checkDrawConditions() {
+        if (game.isThreeRepetition()) {
+            ThreeRepetitionMessage();
+            game.setGameOver(true);
+
+        }
+
+        if (game.offerFiftyMoveDraw()) {
+            openDrawChoice();
+        }
+
+        if (game.isSeventyFiveMoveDraw()) {
+            drawMessage();
+            game.setGameOver(true);
+
+        }
+        if (game.isInsufficientMaterial()) {
+            drawMessage();
+            game.setGameOver(true);
+        }
+    }
+
     public void stalemateMessage() {
         gameOverLayout("STALEMATE", "DRAW - STALEMATE");
-
     }
 
     public void checkmateMessage() {
@@ -406,11 +437,24 @@ public class ChessBoardGUI extends Pane {
         int row = pawn.getRow();
         int col = pawn.getCol();
         StackPane choice = new StackPane();
+        Stage promotionWindow = new Stage();
+
+        HBox buttonLayout = createPromotionButtons(pawn, row, col, promotionWindow);
+
+        choice.getChildren().add(buttonLayout);
+
+        Scene scene = new Scene(choice, 300, 200);
+
+        promotionWindow.setTitle("Pawn promotion");
+        promotionWindow.setScene(scene);
+
+        promotionWindow.show();
+    }
+
+    private HBox createPromotionButtons(Piece pawn, int row, int col, Stage promotionWindow) {
         HBox buttonLayout = new HBox();
-        Stage newWindow = new Stage();
         buttonLayout.setSpacing(10);
         buttonLayout.setAlignment(Pos.CENTER);
-
         String colour = "white".equals(pawn.getColour()) ? "white" : "black";
         String colourShortened = "white".equals(pawn.getColour()) ? "-w" : "-b";
 
@@ -424,39 +468,31 @@ public class ChessBoardGUI extends Pane {
         bishopButton.setGraphic(getPromotionIcon("Bishop" + colourShortened + ".png"));
 
         queenButton.setOnAction(e -> {
-            promotePawn(pawn, new Queen(row, col, colour, null), newWindow);
+            promotePawn(pawn, new Queen(row, col, colour, null), promotionWindow);
         });
         rookButton.setOnAction(e -> {
-            promotePawn(pawn, new Rook(row, col, colour, null), newWindow);
+            promotePawn(pawn, new Rook(row, col, colour, null), promotionWindow);
 
         });
         knightButton.setOnAction(e -> {
-            promotePawn(pawn, new Knight(row, col, colour, null), newWindow);
+            promotePawn(pawn, new Knight(row, col, colour, null), promotionWindow);
 
         });
         bishopButton.setOnAction(e -> {
-            promotePawn(pawn, new Bishop(row, col, colour, null), newWindow);
+            promotePawn(pawn, new Bishop(row, col, colour, null), promotionWindow);
 
         });
 
         buttonLayout.getChildren().addAll(queenButton, rookButton, knightButton, bishopButton);
 
-        choice.getChildren().add(buttonLayout);
-
-        Scene scene = new Scene(choice, 300, 200);
-
-        newWindow.setTitle("Pawn promotion");
-        newWindow.setScene(scene);
-
-        newWindow.show();
+        return buttonLayout;
     }
 
-    private void addPieceIcon(ChessBoardGUI board, Piece piece) {
-
+    public void addPieceIcon(Piece piece) {
         var image = Chess.class.getClassLoader().getResourceAsStream(piece.getImageName());
 
         if (image != null) {
-            board.getIcons().add(new PieceIcon(
+            this.getIcons().add(new PieceIcon(
                     piece.getCol(),
                     piece.getRow(),
                     image,
@@ -487,7 +523,7 @@ public class ChessBoardGUI extends Pane {
         ChessBoard board = game.getBoard();
         board.setPiece(pawn.getRow(), pawn.getCol(), newPiece);
         getIcons().removeIf(icon -> icon.getPiece() == pawn);
-        addPieceIcon(this, newPiece);
+        addPieceIcon(newPiece);
         requestLayout();
         window.close();
     }
@@ -544,7 +580,7 @@ public class ChessBoardGUI extends Pane {
                 Piece piece = newChessBoard.getPiece(row, col);
 
                 if (piece != null) {
-                    addPieceIcon(this, piece);
+                    addPieceIcon(piece);
                 }
 
             }

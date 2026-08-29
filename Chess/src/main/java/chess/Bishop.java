@@ -39,6 +39,7 @@ public class Bishop extends Piece {
 
     }
 
+    // detect pieces in the way
     @Override
     public boolean isCollision(ChessBoard board, int newRow, int newCol, int rowDiff, int colDiff) {
         if (rowDiff == colDiff) {

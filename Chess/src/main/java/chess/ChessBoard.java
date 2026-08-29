@@ -63,16 +63,14 @@ public class ChessBoard {
     public boolean movePiece(Piece piece, int newRow, int newCol) {
         int oldRow = piece.getRow();
         int oldCol = piece.getCol();
-        // if (piece.isValidMove(this, newRow, newCol)) {
+
         board[newRow][newCol] = piece;
         board[oldRow][oldCol] = null;
+
         piece.setRow(newRow);
         piece.setCol(newCol);
         piece.incrementMovesMade();
         return true;
-        // }
-        // return false;
-
     }
 
     public Piece getKing(String colour) {
@@ -106,7 +104,7 @@ public class ChessBoard {
         int oldRow = piece.getRow();
         int oldCol = piece.getCol();
 
-        Piece caputedPiece = board[newRow][newCol];
+        Piece capturedPiece = board[newRow][newCol];
 
         board[newRow][newCol] = piece;
         board[oldRow][oldCol] = null;
@@ -114,7 +112,7 @@ public class ChessBoard {
         piece.setRow(newRow);
         piece.setCol(newCol);
 
-        return caputedPiece;
+        return capturedPiece;
     }
 
     public void undoMove(Piece piece, int oldRow, int oldCol, Piece capturedPiece) {

@@ -3,8 +3,7 @@ package chess;
 import java.io.InputStream;
 import javafx.scene.image.Image;
 
-// Represents an image to be displayed in a GridArea pane. If you change any of
-// the properties, be sure to call 'requestLayout()' on the GridArea after you're done.
+// Represents an image to be displayed in a GridArea pane.
 
 public class PieceIcon {
     private double x;
