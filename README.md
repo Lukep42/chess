@@ -60,7 +60,7 @@ The application is divided into several components:
      3.3 Give execution permission by typing: 
              
             chmod +x gradlew
-      <i>This step can be skipped if it was already done before.</i> <br>
+      <i>This step can be skipped if it was done prior.</i> <br>
      3.4 Type:
    
             ./gradlew test
